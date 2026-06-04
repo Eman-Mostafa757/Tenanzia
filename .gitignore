@@ -1,0 +1,8 @@
+# Sensitive files
+**/appsettings.json
+**/appsettings.Development.json
+
+# Build outputs
+**/bin/
+**/obj/
+**/.vs/
