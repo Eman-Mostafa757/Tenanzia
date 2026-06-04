@@ -1,0 +1,193 @@
+<div class="min-h-screen bg-[#0D0D0F]">
+
+  <!-- Nav -->
+  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+        <span class="text-white text-sm font-medium">T</span>
+      </div>
+      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+                  <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Settings</button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
+        {{ me?.username[0]?.toUpperCase() }}
+      </div>
+    </div>
+  </nav>
+
+  <div class="p-6 max-w-3xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-medium text-[#F0F0F2]">Settings</h1>
+      <p class="text-[#666] text-sm mt-1">Manage your account and company settings</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-20 text-[#666] text-sm">Loading...</div>
+
+    <div *ngIf="!loading">
+
+      <!-- Success / Error -->
+      <div *ngIf="success" class="mb-4 bg-[#12251E] border border-[#5DCAA5] text-[#5DCAA5] text-sm px-4 py-3 rounded-xl">
+        ✅ {{ success }}
+      </div>
+      <div *ngIf="error" class="mb-4 bg-[#3C1528] border border-[#D4537E] text-[#ED93B1] text-sm px-4 py-3 rounded-xl">
+        ❌ {{ error }}
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-1 mb-6">
+        <button (click)="activeTab = 'profile'"
+          class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'profile'"
+          [class.text-[#F0F0F2]]="activeTab === 'profile'"
+          [class.text-[#666]]="activeTab !== 'profile'">
+          👤 Profile
+        </button>
+        <button (click)="activeTab = 'password'"
+          class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'password'"
+          [class.text-[#F0F0F2]]="activeTab === 'password'"
+          [class.text-[#666]]="activeTab !== 'password'">
+          🔒 Password
+        </button>
+        <button *ngIf="isOwner" (click)="activeTab = 'company'"
+          class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'company'"
+          [class.text-[#F0F0F2]]="activeTab === 'company'"
+          [class.text-[#666]]="activeTab !== 'company'">
+          🏢 Company
+        </button>
+      </div>
+
+      <!-- Profile Tab -->
+      <div *ngIf="activeTab === 'profile'" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-6">
+
+        <!-- Avatar -->
+        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-[#1E1E24]">
+          <div class="w-16 h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-2xl text-white font-medium">
+            {{ me?.username[0]?.toUpperCase() }}
+          </div>
+          <div>
+            <div class="text-sm font-medium text-[#F0F0F2]">{{ me?.username }}</div>
+            <div class="text-xs text-[#666] mt-1">{{ me?.email }}</div>
+            <div class="text-xs mt-1">
+              <span class="px-2 py-0.5 rounded-full text-xs"
+                [class.bg-[#3C1528]]="me?.role === 'Owner'"
+                [class.text-[#ED93B1]]="me?.role === 'Owner'"
+                [class.bg-[#1A1829]]="me?.role === 'Manager'"
+                [class.text-[#7F77DD]]="me?.role === 'Manager'"
+                [class.bg-[#12251E]]="me?.role === 'Employee'"
+                [class.text-[#5DCAA5]]="me?.role === 'Employee'">
+                {{ me?.role }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Username</label>
+            <input [(ngModel)]="profileForm.username"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email</label>
+            <input [(ngModel)]="profileForm.email" type="email"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+        </div>
+
+        <button (click)="saveProfile()"
+          class="mt-6 bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-6 py-2.5 rounded-xl transition-colors">
+          Save Changes
+        </button>
+      </div>
+
+      <!-- Password Tab -->
+      <div *ngIf="activeTab === 'password'" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-6">
+        <h2 class="text-sm font-medium text-[#F0F0F2] mb-4">Change Password</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">New Password</label>
+            <input [(ngModel)]="profileForm.newPassword" type="password" placeholder="••••••••"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Confirm New Password</label>
+            <input [(ngModel)]="profileForm.confirmPassword" type="password" placeholder="••••••••"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+        </div>
+        <button (click)="saveProfile()"
+          class="mt-6 bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-6 py-2.5 rounded-xl transition-colors">
+          Update Password
+        </button>
+      </div>
+
+      <!-- Company Tab — Owner Only -->
+      <div *ngIf="activeTab === 'company' && isOwner" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-6">
+
+        <!-- Company Info -->
+        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-[#1E1E24]">
+          <div class="w-16 h-16 rounded-xl bg-[#1E1E24] flex items-center justify-center text-2xl">
+            🏢
+          </div>
+          <div>
+            <div class="text-sm font-medium text-[#F0F0F2]">{{ me?.company?.name }}</div>
+            <div class="text-xs text-[#666] mt-1">
+              Created {{ me?.company?.createdAt | date:'MMM d, y' }}
+            </div>
+            <div class="text-xs text-[#ED93B1] bg-[#3C1528] px-2 py-0.5 rounded-full inline-block mt-1">
+              Owner
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Company Name</label>
+            <input [(ngModel)]="companyForm.name"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+        </div>
+
+        <button (click)="saveCompany()"
+          class="mt-6 bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-6 py-2.5 rounded-xl transition-colors">
+          Save Company Settings
+        </button>
+
+        <!-- Danger Zone -->
+        <div class="mt-8 pt-6 border-t border-[#1E1E24]">
+          <div class="text-xs text-[#666] uppercase tracking-wider mb-3">Subscription</div>
+          <div class="flex items-center justify-between bg-[#0D0D0F] border border-[#1E1E24] rounded-xl p-4">
+            <div>
+              <div class="text-sm text-[#F0F0F2]">Pro Plan</div>
+              <div class="text-xs text-[#666] mt-1">$29 / month</div>
+            </div>
+            <button (click)="goTo('subscription')"
+              class="text-xs bg-[#1A1829] text-[#7F77DD] px-3 py-1.5 rounded-lg hover:bg-[#252438] transition-colors">
+              Manage Plan
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

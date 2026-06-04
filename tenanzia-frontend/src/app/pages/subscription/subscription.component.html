@@ -1,0 +1,138 @@
+<div class="min-h-screen bg-[#0D0D0F]">
+
+  <!-- Nav -->
+  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+        <span class="text-white text-sm font-medium">T</span>
+      </div>
+      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+    </div>
+  </nav>
+
+  <div class="p-6 max-w-4xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-2xl font-medium text-[#F0F0F2]">Choose your Plan</h1>
+      <p class="text-[#666] text-sm mt-2">Upgrade anytime to unlock more features</p>
+    </div>
+
+    <!-- Success / Error -->
+    <div *ngIf="success" class="mb-6 bg-[#12251E] border border-[#5DCAA5] text-[#5DCAA5] text-sm px-4 py-3 rounded-xl text-center">
+      ✅ {{ success }}
+    </div>
+    <div *ngIf="error" class="mb-6 bg-[#3C1528] border border-[#D4537E] text-[#ED93B1] text-sm px-4 py-3 rounded-xl text-center">
+      ❌ {{ error }}
+    </div>
+
+    <!-- Current Plan -->
+    <div *ngIf="current" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 mb-8 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-2 h-2 rounded-full bg-[#5DCAA5]"></div>
+        <span class="text-sm text-[#F0F0F2]">Current Plan: <strong>{{ current.planName }}</strong></span>
+        <span class="text-xs text-[#666]">— ${{ current.price }}/month</span>
+      </div>
+      <span class="text-xs bg-[#12251E] text-[#5DCAA5] px-3 py-1 rounded-full">Active</span>
+    </div>
+
+    <!-- Plans Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-3 gap-6">
+      <div *ngFor="let plan of plans"
+        class="bg-[#111114] border rounded-2xl p-6 flex flex-col relative"
+        [class.border-[#D4537E]]="plan.name === 'Pro'"
+        [class.border-[#1E1E24]]="plan.name !== 'Pro'">
+
+        <!-- Popular Badge -->
+        <div *ngIf="plan.name === 'Pro'"
+          class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D4537E] text-white text-xs px-4 py-1 rounded-full">
+          Most Popular
+        </div>
+
+        <!-- Plan Name -->
+        <div class="text-sm font-medium text-[#F0F0F2] mb-1">{{ plan.name }}</div>
+
+        <!-- Price -->
+        <div class="mb-6">
+          <span class="text-3xl font-medium text-[#F0F0F2]">${{ plan.price }}</span>
+          <span class="text-[#666] text-sm">/month</span>
+        </div>
+
+        <!-- Features -->
+        <div class="space-y-3 flex-1 mb-6">
+          <div class="flex items-center gap-2 text-xs text-[#666]">
+            <span class="text-[#5DCAA5]">✓</span>
+            {{ plan.maxCustomers === 999999 ? 'Unlimited' : plan.maxCustomers }} customers
+          </div>
+          <div class="flex items-center gap-2 text-xs text-[#666]">
+            <span class="text-[#5DCAA5]">✓</span>
+            {{ plan.maxTasks === 999999 ? 'Unlimited' : plan.maxTasks }} tasks
+          </div>
+          <div class="flex items-center gap-2 text-xs"
+            [class.text-[#666]]="plan.name !== 'Free'"
+            [class.text-[#444]]="plan.name === 'Free'">
+            <span [class.text-[#5DCAA5]]="plan.name !== 'Free'"
+                  [class.text-[#333]]="plan.name === 'Free'">
+              {{ plan.name !== 'Free' ? '✓' : '✕' }}
+            </span>
+            Advanced analytics
+          </div>
+          <div class="flex items-center gap-2 text-xs"
+            [class.text-[#666]]="plan.name !== 'Free'"
+            [class.text-[#444]]="plan.name === 'Free'">
+            <span [class.text-[#5DCAA5]]="plan.name !== 'Free'"
+                  [class.text-[#333]]="plan.name === 'Free'">
+              {{ plan.name !== 'Free' ? '✓' : '✕' }}
+            </span>
+            Team collaboration
+          </div>
+          <div class="flex items-center gap-2 text-xs"
+            [class.text-[#666]]="plan.name === 'Enterprise'"
+            [class.text-[#444]]="plan.name !== 'Enterprise'">
+            <span [class.text-[#5DCAA5]]="plan.name === 'Enterprise'"
+                  [class.text-[#333]]="plan.name !== 'Enterprise'">
+              {{ plan.name === 'Enterprise' ? '✓' : '✕' }}
+            </span>
+            Premium support
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div>
+          <!-- Current Plan -->
+          <button *ngIf="isCurrent(plan.name)"
+            disabled
+            class="w-full bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl cursor-not-allowed">
+            Current Plan ✓
+          </button>
+
+          <!-- Free — Downgrade -->
+          <button *ngIf="!isCurrent(plan.name) && plan.name === 'Free'"
+            (click)="downgrade()"
+            class="w-full bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
+            Downgrade to Free
+          </button>
+
+          <!-- Pro / Enterprise — Upgrade -->
+          <button *ngIf="!isCurrent(plan.name) && plan.name !== 'Free'"
+            (click)="upgrade(plan.name)"
+            class="w-full text-white text-sm py-2.5 rounded-xl transition-colors"
+            [class.bg-[#D4537E]]="plan.name === 'Pro'"
+            [class.hover:bg-[#C4436E]]="plan.name === 'Pro'"
+            [class.bg-[#7F77DD]]="plan.name === 'Enterprise'"
+            [class.hover:bg-[#6F67CD]]="plan.name === 'Enterprise'">
+            Upgrade to {{ plan.name }} →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

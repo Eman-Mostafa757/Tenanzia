@@ -1,0 +1,190 @@
+<div class="min-h-screen bg-[#0D0D0F]">
+
+  <!-- Nav -->
+  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+        <span class="text-white text-sm font-medium">T</span>
+      </div>
+      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+            <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+    </div>
+    <div class="flex items-center gap-3">
+                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
+      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{ username[0]?.toUpperCase() }}</div>
+      <!-- Theme Toggle -->
+<button (click)="themeService.toggle()"
+  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
+  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+</button>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-96">
+    <div class="text-[#666] text-sm">Loading...</div>
+  </div>
+
+  <div *ngIf="!loading && profile" class="p-6">
+
+    <!-- Back -->
+    <button (click)="goTo('team')" class="flex items-center gap-2 text-[#666] hover:text-[#F0F0F2] text-sm mb-6 transition-colors">
+      ← Back to Team
+    </button>
+
+    <!-- Profile Header -->
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-6 mb-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-2xl text-white font-medium">
+          {{ profile.username[0]?.toUpperCase() }}
+        </div>
+        <div>
+          <h1 class="text-xl font-medium text-[#F0F0F2]">{{ profile.username }}</h1>
+          <p class="text-[#666] text-sm mt-1">{{ profile.email }}</p>
+          <div class="flex items-center gap-2 mt-2">
+            <!-- Role Badge -->
+            <span class="text-xs px-2 py-1 rounded-full"
+              [class.bg-[#3C1528]]="profile.role === 'Owner'"
+              [class.text-[#ED93B1]]="profile.role === 'Owner'"
+              [class.bg-[#1A1829]]="profile.role === 'Manager'"
+              [class.text-[#7F77DD]]="profile.role === 'Manager'"
+              [class.bg-[#12251E]]="profile.role === 'Employee'"
+              [class.text-[#5DCAA5]]="profile.role === 'Employee'">
+              {{ profile.role }}
+            </span>
+            <!-- Activity Status -->
+            <span class="text-xs px-2 py-1 rounded-full flex items-center gap-1" [class]="getActivityClass()">
+              <span class="w-1.5 h-1.5 rounded-full" [class]="getActivityDot()"></span>
+              {{ profile.activityStatus }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-xs text-[#666]">Joined</div>
+        <div class="text-sm text-[#F0F0F2] mt-1">{{ profile.joinedAt | date:'MMM d, y' }}</div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-5 gap-3 mb-4">
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#7F77DD]"></div>
+        <div class="text-xs text-[#7F77DD] uppercase tracking-wider mb-2">Total</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.totalTasks }}</div>
+        <div class="text-xs text-[#666] mt-1">tasks assigned</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
+        <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Done</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.completedTasks }}</div>
+        <div class="text-xs text-[#666] mt-1">completed</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#D4537E]"></div>
+        <div class="text-xs text-[#D4537E] uppercase tracking-wider mb-2">To Do</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.toDoTasks }}</div>
+        <div class="text-xs text-[#666] mt-1">pending</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
+        <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-2">Overdue</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.overdueTasks }}</div>
+        <div class="text-xs text-[#666] mt-1">past due date</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
+        <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Rate</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.completionRate }}%</div>
+        <div class="text-xs text-[#666] mt-1">completion</div>
+      </div>
+    </div>
+
+    <!-- Completion Rate Bar -->
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-xs text-[#666] uppercase tracking-wider">Performance</span>
+        <span class="text-sm text-[#F0F0F2] font-medium">{{ profile.completionRate }}%</span>
+      </div>
+      <div class="h-2 bg-[#1E1E24] rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-500"
+          [style.width.%]="profile.completionRate"
+          [class.bg-[#5DCAA5]]="profile.completionRate >= 70"
+          [class.bg-[#EF9F27]]="profile.completionRate >= 40 && profile.completionRate < 70"
+          [class.bg-[#D4537E]]="profile.completionRate < 40">
+        </div>
+      </div>
+      <div class="flex justify-between mt-2">
+        <span class="text-xs text-[#666]">0%</span>
+        <span class="text-xs text-[#666]">100%</span>
+      </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-[#1E1E24]">
+        <span class="text-xs text-[#666] uppercase tracking-wider">Assigned Tasks</span>
+      </div>
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-[#1E1E24]">
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Task</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Priority</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Status</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of profile.tasks"
+            class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors"
+            [class.opacity-50]="task.status === 'Cancelled'">
+            <td class="px-5 py-4">
+              <div class="text-sm text-[#F0F0F2]"
+                [class.line-through]="task.status === 'Completed' || task.status === 'Cancelled'">
+                {{ task.title }}
+              </div>
+              <div class="text-xs text-[#666] mt-0.5" *ngIf="task.description">{{ task.description }}</div>
+            </td>
+            <td class="px-5 py-4">
+              <span class="text-xs font-medium" [class]="getPriorityClass(task.priority)">
+                {{ task.priority }}
+              </span>
+            </td>
+            <td class="px-5 py-4">
+              <span class="text-xs px-2 py-1 rounded-full" [class]="getStatusClass(task.status)">
+                {{ task.status }}
+              </span>
+            </td>
+            <td class="px-5 py-4">
+              <span class="text-xs"
+                [class.text-[#D4537E]]="task.isOverdue"
+                [class.text-[#666]]="!task.isOverdue">
+                {{ task.dueDate ? (task.dueDate | date:'MMM d, y') : '—' }}
+                <span *ngIf="task.isOverdue" class="ml-1">⚠</span>
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="profile.tasks.length === 0">
+            <td colspan="4" class="text-center py-12 text-[#666] text-sm">No tasks assigned yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

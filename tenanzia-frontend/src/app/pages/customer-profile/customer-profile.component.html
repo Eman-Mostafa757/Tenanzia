@@ -1,0 +1,212 @@
+<div class="min-h-screen bg-[#0D0D0F]">
+
+  <!-- Nav -->
+  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+        <span class="text-white text-sm font-medium">T</span>
+      </div>
+      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
+    </div>
+    <div class="flex items-center gap-1">
+      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Customers</button>
+      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+            <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+              <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+    </div>
+    <div class="flex items-center gap-3">
+                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
+      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{ username[0]?.toUpperCase() }}</div>
+      <!-- Theme Toggle -->
+<button (click)="themeService.toggle()"
+  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
+  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+</button>
+    </div>
+  </nav>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-96">
+    <div class="text-[#666] text-sm">Loading...</div>
+  </div>
+
+  <div *ngIf="!loading && profile" class="p-6">
+
+    <!-- Back -->
+    <button (click)="goTo('customers')" class="flex items-center gap-2 text-[#666] hover:text-[#F0F0F2] text-sm mb-6 transition-colors">
+      ← Back to Customers
+    </button>
+
+    <!-- Profile Header -->
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-6 mb-4">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-2xl text-white font-medium">
+            {{ profile.name[0]?.toUpperCase() }}
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-medium text-[#F0F0F2]">{{ profile.name }}</h1>
+              <span class="text-xs px-2 py-0.5 rounded-full" [class]="getValueScoreClass()">
+                {{ profile.valueScore }}
+              </span>
+              <span class="text-xs px-2 py-0.5 rounded-full"
+                [class.bg-[#12251E]]="profile.status === 'Active'"
+                [class.text-[#5DCAA5]]="profile.status === 'Active'"
+                [class.bg-[#1E1E24]]="profile.status !== 'Active'"
+                [class.text-[#666]]="profile.status !== 'Active'">
+                {{ profile.status }}
+              </span>
+            </div>
+            <div class="flex items-center gap-4 mt-2">
+              <span class="text-xs text-[#666]" *ngIf="profile.email">📧 {{ profile.email }}</span>
+              <span class="text-xs text-[#666]" *ngIf="profile.phone">📞 {{ profile.phone }}</span>
+              <span class="text-xs text-[#666]" *ngIf="profile.address">📍 {{ profile.address }}</span>
+            </div>
+            <div class="mt-2" *ngIf="profile.notes">
+              <span class="text-xs text-[#666]">📝 {{ profile.notes }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-[#666]">Customer since</div>
+          <div class="text-sm text-[#F0F0F2] mt-1">{{ profile.createdAt | date:'MMM d, y' }}</div>
+          <div class="text-xs mt-2" [class]="getLastOrderClass()">{{ getLastOrderText() }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-6 gap-3 mb-4">
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#7F77DD]"></div>
+        <div class="text-xs text-[#7F77DD] uppercase tracking-wider mb-2">Orders</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.totalOrders }}</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
+        <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Spent</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">${{ profile.totalSpent }}</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
+        <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-2">Pending</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.pendingOrders }}</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
+        <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Completed</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.completedOrders }}</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
+        <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Paid</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.paidInvoices }}</div>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#D4537E]"></div>
+        <div class="text-xs text-[#D4537E] uppercase tracking-wider mb-2">Unpaid</div>
+        <div class="text-2xl font-medium text-[#F0F0F2]">{{ profile.unpaidInvoices }}</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-1 mb-4">
+      <button (click)="activeTab = 'orders'"
+        class="px-4 py-2 text-xs rounded-lg transition-colors"
+        [class.bg-[#1A1A20]]="activeTab === 'orders'"
+        [class.text-[#F0F0F2]]="activeTab === 'orders'"
+        [class.text-[#666]]="activeTab !== 'orders'">
+        Orders ({{ profile.orders?.length || 0 }})
+      </button>
+      <button (click)="activeTab = 'invoices'"
+        class="px-4 py-2 text-xs rounded-lg transition-colors"
+        [class.bg-[#1A1A20]]="activeTab === 'invoices'"
+        [class.text-[#F0F0F2]]="activeTab === 'invoices'"
+        [class.text-[#666]]="activeTab !== 'invoices'">
+        Invoices ({{ profile.invoices?.length || 0 }})
+      </button>
+    </div>
+
+    <!-- Orders Tab -->
+    <div *ngIf="activeTab === 'orders'" class="bg-[#111114] border border-[#1E1E24] rounded-xl overflow-hidden">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-[#1E1E24]">
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Order</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Items</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Status</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Total</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of profile.orders"
+            class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
+            <td class="px-5 py-4 text-sm text-[#F0F0F2]">#{{ order.id }}</td>
+            <td class="px-5 py-4">
+              <div *ngFor="let item of order.items" class="text-xs text-[#666]">
+                {{ item.productName }} × {{ item.quantity }}
+              </div>
+            </td>
+            <td class="px-5 py-4">
+              <span class="text-xs px-2 py-1 rounded-full" [class]="getStatusClass(order.status)">
+                {{ order.status }}
+              </span>
+            </td>
+            <td class="px-5 py-4 text-sm text-[#F0F0F2]">${{ order.totalAmount }}</td>
+            <td class="px-5 py-4 text-xs text-[#666]">{{ order.createdAt | date:'MMM d, y' }}</td>
+          </tr>
+          <tr *ngIf="profile.orders?.length === 0">
+            <td colspan="5" class="text-center py-12 text-[#666] text-sm">No orders yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Invoices Tab -->
+    <div *ngIf="activeTab === 'invoices'" class="bg-[#111114] border border-[#1E1E24] rounded-xl overflow-hidden">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-[#1E1E24]">
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Invoice</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Status</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Amount</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Issued</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Paid At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of profile.invoices"
+            class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
+            <td class="px-5 py-4 text-sm text-[#F0F0F2]">#{{ invoice.id }}</td>
+            <td class="px-5 py-4">
+              <span class="text-xs px-2 py-1 rounded-full" [class]="getStatusClass(invoice.status)">
+                {{ invoice.status }}
+              </span>
+            </td>
+            <td class="px-5 py-4 text-sm text-[#F0F0F2]">${{ invoice.amount }}</td>
+            <td class="px-5 py-4 text-xs text-[#666]">{{ invoice.issuedAt | date:'MMM d, y' }}</td>
+            <td class="px-5 py-4 text-xs text-[#666]">
+              {{ invoice.paidAt ? (invoice.paidAt | date:'MMM d, y') : '—' }}
+            </td>
+          </tr>
+          <tr *ngIf="profile.invoices?.length === 0">
+            <td colspan="5" class="text-center py-12 text-[#666] text-sm">No invoices yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

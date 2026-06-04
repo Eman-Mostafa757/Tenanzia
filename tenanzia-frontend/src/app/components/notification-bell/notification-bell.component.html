@@ -1,0 +1,70 @@
+<div class="relative">
+
+  <!-- Bell Button -->
+  <button (click)="toggleDropdown()"
+    class="relative w-8 h-8 rounded-lg flex items-center justify-center bg-[#1E1E24] hover:bg-[#2A2A30] transition-colors">
+    <span class="text-sm">🔔</span>
+    <!-- Unread Count Badge -->
+    <div *ngIf="unreadCount > 0"
+      class="absolute -top-1 -right-1 w-4 h-4 bg-[#D4537E] rounded-full flex items-center justify-center">
+      <span class="text-[9px] text-white font-medium">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+    </div>
+  </button>
+
+  <!-- Dropdown -->
+  <div *ngIf="showDropdown"
+    class="absolute right-0 top-10 w-80 bg-[#111114] border border-[#1E1E24] rounded-xl shadow-2xl z-50">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-[#1E1E24]">
+      <span class="text-sm font-medium text-[#F0F0F2]">Notifications</span>
+      <button *ngIf="unreadCount > 0" (click)="markAllAsRead()"
+        class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
+        Mark all read
+      </button>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="max-h-80 overflow-y-auto">
+      <div *ngFor="let n of notifications"
+        (click)="markAsRead(n.id)"
+        class="flex gap-3 px-4 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer transition-colors"
+        [class.bg-[#0D0D0F]]="!n.isRead"
+        [class.hover:bg-[#1A1A20]]="!n.isRead"
+        [class.hover:bg-[#0D0D0F]]="n.isRead">
+
+        <!-- Icon -->
+        <div class="w-8 h-8 rounded-lg bg-[#1E1E24] flex items-center justify-center text-sm flex-shrink-0">
+          {{ getTypeIcon(n.type) }}
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-medium truncate"
+              [class.text-[#F0F0F2]]="!n.isRead"
+              [class.text-[#666]]="n.isRead">
+              {{ n.title }}
+            </span>
+            <div *ngIf="!n.isRead" class="w-1.5 h-1.5 rounded-full bg-[#D4537E] flex-shrink-0"></div>
+          </div>
+          <p class="text-xs text-[#666] mt-0.5 truncate">{{ n.message }}</p>
+          <span class="text-[10px] text-[#444] mt-1 block">{{ getTimeAgo(n.createdAt) }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="notifications.length === 0"
+        class="text-center py-8 text-[#444] text-xs">
+        No notifications yet
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Backdrop -->
+  <div *ngIf="showDropdown"
+    class="fixed inset-0 z-40"
+    (click)="showDropdown = false">
+  </div>
+
+</div>

@@ -1,0 +1,48 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Dark Mode — Default */
+:root, .dark {
+  --bg-primary: #0D0D0F;
+  --bg-surface: #111114;
+  --bg-secondary: #1A1A20;
+  --border: #1E1E24;
+  --text-primary: #F0F0F2;
+  --text-secondary: #666666;
+  --text-muted: #444444;
+  --pink: #D4537E;
+  --pink-dark: #3C1528;
+  --pink-light: #ED93B1;
+}
+
+/* Light Mode */
+.light {
+  --bg-primary: #F8F8FA;
+  --bg-surface: #FFFFFF;
+  --bg-secondary: #F0F0F4;
+  --border: #E2E2E8;
+  --text-primary: #111114;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --pink: #D4537E;
+  --pink-dark: #FCE8EF;
+  --pink-light: #D4537E;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}

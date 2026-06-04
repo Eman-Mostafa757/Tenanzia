@@ -1,0 +1,135 @@
+<div class="min-h-screen bg-[#0D0D0F]">
+
+  <!-- Nav -->
+  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+        <span class="text-white text-sm font-medium">T</span>
+      </div>
+      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
+    </div>
+    <div class="flex items-center gap-1">
+     <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
+      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full">Pro Plan</span>
+      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+    </div>
+  </nav>
+
+  <div class="p-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-xl font-medium text-[#F0F0F2]">Products & Services</h1>
+        <p class="text-[#666] text-sm mt-1">{{ products.length }} items in catalog</p>
+      </div>
+      <button (click)="openAddModal()"
+        class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
+        + Add Product
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-20 text-[#666] text-sm">Loading...</div>
+
+    <!-- Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-3 gap-4">
+      <div *ngFor="let product of products"
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 hover:border-[#2A2A30] transition-colors">
+
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-lg bg-[#1E1E24] flex items-center justify-center text-lg">
+            📦
+          </div>
+          <div class="flex gap-2">
+            <button (click)="openEditModal(product)"
+              class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">Edit</button>
+            <button (click)="deleteProduct(product.id)"
+              class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">Delete</button>
+          </div>
+        </div>
+
+        <div class="text-sm font-medium text-[#F0F0F2] mb-1">{{ product.name }}</div>
+        <div class="text-xs text-[#666] mb-3" *ngIf="product.description">
+          {{ product.description }}
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-medium text-[#D4537E]">${{ product.price | number }}</span>
+          <span class="text-xs text-[#444] bg-[#1E1E24] px-2 py-0.5 rounded-full">
+            per {{ product.unit || 'piece' }}
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="products.length === 0"
+        class="col-span-3 text-center py-20 text-[#333] text-sm">
+        No products yet — add your first product!
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl p-6 w-full max-w-md">
+
+      <h2 class="text-[#F0F0F2] font-medium mb-5">
+        {{ editingProduct ? 'Edit Product' : 'Add Product' }}
+      </h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Name *</label>
+          <input [(ngModel)]="form.name"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+        </div>
+        <div>
+          <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Description</label>
+          <input [(ngModel)]="form.description"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Price *</label>
+            <input [(ngModel)]="form.price" type="number" min="0"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          </div>
+          <div>
+            <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Unit</label>
+            <select [(ngModel)]="form.unit"
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
+              <option value="piece">Piece</option>
+              <option value="hour">Hour</option>
+              <option value="day">Day</option>
+              <option value="month">Month</option>
+              <option value="kg">KG</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button (click)="showModal = false"
+          class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
+          Cancel
+        </button>
+        <button (click)="saveProduct()"
+          class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">
+          {{ editingProduct ? 'Save Changes' : 'Add Product' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
