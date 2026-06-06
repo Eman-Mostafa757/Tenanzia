@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { SubscriptionService } from '../../services/subscription.service';
+import { ExportService } from '../../services/export.service';
 
 @Component({
   selector: 'app-customers',
@@ -46,6 +47,8 @@ export class CustomersComponent implements OnInit {
     private router: Router,
     public themeService: ThemeService,
     private subscriptionService: SubscriptionService,
+      private exportService: ExportService
+
 
   ) { }
 
@@ -135,5 +138,8 @@ export class CustomersComponent implements OnInit {
     })
 
   }
+  exportCSV() {
+  this.exportService.exportCustomersCSV(this.customers);
+}
 
 }

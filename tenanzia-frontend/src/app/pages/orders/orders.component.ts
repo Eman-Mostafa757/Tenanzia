@@ -9,6 +9,7 @@ import { ThemeService } from '../../services/theme.service';
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { SubscriptionService } from '../../services/subscription.service';
 import { ProductsService } from '../../services/products.service';
+import { ExportService } from '../../services/export.service';
 
 @Component({
   selector: 'app-orders',
@@ -68,6 +69,8 @@ export class OrdersComponent implements OnInit {
     public themeService: ThemeService,
     private subscriptionService: SubscriptionService,
     private productsService: ProductsService,
+      private exportService: ExportService
+
 
 
   ) { }
@@ -316,6 +319,9 @@ export class OrdersComponent implements OnInit {
     )
 
   }
+  exportPDF() {
+  this.exportService.exportOrdersPDF(this.orders, this.stats);
+}
 
 
 

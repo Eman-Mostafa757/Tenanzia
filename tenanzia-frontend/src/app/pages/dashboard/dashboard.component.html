@@ -10,17 +10,25 @@
     </div>
     <div class="flex items-center gap-1">
       <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button *ngIf="isOwner" (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button *ngIf="isOwner" (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
     <div class="flex items-center gap-3">
       <app-notification-bell></app-notification-bell>
-      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')">
         {{ curuntPlan?.planName || 'Free' }} plan
       </button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
@@ -29,8 +37,7 @@
       </div>
       <button (click)="themeService.toggle()"
         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-        [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-        [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
         [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
         <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
         <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
@@ -68,8 +75,7 @@
       <!-- لو Employee نخلي Orders تاخد col-span-2 -->
       <button
         class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#7F77DD] transition-colors"
-        [class.col-span-2]="isEmployee"
-        (click)="goTo('orders')">
+        [class.col-span-2]="isEmployee" (click)="goTo('orders')">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#7F77DD]"></div>
         <div class="text-xs text-[#7F77DD] uppercase tracking-wider mb-3">Orders</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalOrders }}</div>
@@ -86,8 +92,7 @@
 
       <button
         class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#EF9F27] transition-colors"
-        [class.col-span-2]="isEmployee"
-        (click)="goTo('tasks')">
+        [class.col-span-2]="isEmployee" (click)="goTo('tasks')">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
         <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">Tasks</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalTasks }}</div>
@@ -106,8 +111,7 @@
           class="flex items-center gap-2 bg-[#1E1E24] px-3 py-1.5 rounded-lg cursor-pointer hover:border-[#EF9F27] border border-transparent transition-colors"
           (click)="goTo('products')">
           <span class="text-xs text-[#F0F0F2]">{{ p.name }}</span>
-          <span class="text-xs font-medium"
-            [class.text-[#D4537E]]="p.stockQuantity === 0"
+          <span class="text-xs font-medium" [class.text-[#D4537E]]="p.stockQuantity === 0"
             [class.text-[#EF9F27]]="p.stockQuantity > 0">
             {{ p.stockQuantity === 0 ? 'Out of stock' : p.stockQuantity + ' left' }}
           </span>
@@ -123,7 +127,13 @@
             <div class="text-xs text-[#666] uppercase tracking-wider">Revenue</div>
             <div class="text-sm text-[#F0F0F2] mt-1">Last 6 months</div>
           </div>
-          <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-1 rounded-full">Bar</span>
+          <div class="flex items-center gap-2">
+            <button (click)="exportRevenue()"
+              class="text-xs bg-[#1E1E24] text-[#666] hover:text-[#F0F0F2] px-3 py-1.5 rounded-lg transition-colors">
+              ↓ Export PDF
+            </button>
+            <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-1 rounded-full">Bar</span>
+          </div>
         </div>
         <canvas #revenueChart height="120"></canvas>
       </div>
@@ -149,11 +159,12 @@
           class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer hover:opacity-80 transition-opacity"
           (click)="goTo('customers/' + customer.customerId)">
           <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-            [class.bg-[#2A1F0A]]="i === 0" [class.text-[#EF9F27]]="i === 0"
-            [class.bg-[#1E1E24]]="i !== 0" [class.text-[#666]]="i !== 0">
+            [class.bg-[#2A1F0A]]="i === 0" [class.text-[#EF9F27]]="i === 0" [class.bg-[#1E1E24]]="i !== 0"
+            [class.text-[#666]]="i !== 0">
             {{ i + 1 }}
           </div>
-          <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
+          <div
+            class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
             {{ customer.customerName[0]?.toUpperCase() }}
           </div>
           <div class="flex-1">
@@ -187,7 +198,8 @@
           <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs text-[#666] uppercase tracking-wider">In Progress</span>
-              <span class="text-xs text-[#7F77DD] bg-[#1A1829] px-2 py-0.5 rounded-full">{{ data.inProgressTasks }}</span>
+              <span class="text-xs text-[#7F77DD] bg-[#1A1829] px-2 py-0.5 rounded-full">{{ data.inProgressTasks
+                }}</span>
             </div>
             <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
               <div class="h-full bg-[#7F77DD] rounded-full"
@@ -197,7 +209,8 @@
           <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs text-[#666] uppercase tracking-wider">Done</span>
-              <span class="text-xs text-[#5DCAA5] bg-[#12251E] px-2 py-0.5 rounded-full">{{ data.completedTasks }}</span>
+              <span class="text-xs text-[#5DCAA5] bg-[#12251E] px-2 py-0.5 rounded-full">{{ data.completedTasks
+                }}</span>
             </div>
             <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
               <div class="h-full bg-[#5DCAA5] rounded-full"
@@ -240,14 +253,10 @@
           </div>
           <div class="text-right">
             <div *ngIf="isManagerOrOwner" class="text-sm text-[#F0F0F2] mb-1">${{ order.totalAmount }}</div>
-            <span class="text-xs px-2 py-0.5 rounded-full"
-              [class.bg-[#12251E]]="order.status === 'Completed'"
-              [class.text-[#5DCAA5]]="order.status === 'Completed'"
-              [class.bg-[#1A1829]]="order.status === 'Processing'"
-              [class.text-[#7F77DD]]="order.status === 'Processing'"
-              [class.bg-[#2A1F0A]]="order.status === 'Pending'"
-              [class.text-[#EF9F27]]="order.status === 'Pending'"
-              [class.bg-[#1E1E24]]="order.status === 'Cancelled'"
+            <span class="text-xs px-2 py-0.5 rounded-full" [class.bg-[#12251E]]="order.status === 'Completed'"
+              [class.text-[#5DCAA5]]="order.status === 'Completed'" [class.bg-[#1A1829]]="order.status === 'Processing'"
+              [class.text-[#7F77DD]]="order.status === 'Processing'" [class.bg-[#2A1F0A]]="order.status === 'Pending'"
+              [class.text-[#EF9F27]]="order.status === 'Pending'" [class.bg-[#1E1E24]]="order.status === 'Cancelled'"
               [class.text-[#666]]="order.status === 'Cancelled'">
               {{ order.status }}
             </span>
@@ -264,7 +273,8 @@
         <div *ngFor="let customer of data.recentCustomers"
           class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer hover:opacity-80 transition-opacity"
           (click)="goTo('customers/' + customer.id)">
-          <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
+          <div
+            class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
             {{ customer.name[0]?.toUpperCase() }}
           </div>
           <div>

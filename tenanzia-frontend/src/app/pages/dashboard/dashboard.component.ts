@@ -8,6 +8,7 @@ import { Chart, registerables } from 'chart.js';
 import { ThemeService } from '../../services/theme.service';
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { SubscriptionService } from '../../services/subscription.service';
+import { ExportService } from '../../services/export.service';
 
 Chart.register(...registerables);
 
@@ -44,6 +45,8 @@ isManagerOrOwner = false;
     private router: Router,
      public themeService: ThemeService,
      private subscriptionService: SubscriptionService,
+       private exportService: ExportService
+
   ) {}
 
 
@@ -188,5 +191,12 @@ isManagerOrOwner = false;
     })
 
   }
+  exportRevenue() {
+  this.exportService.exportRevenuePDF(
+    this.chartData,
+    this.data,
+    this.data.companyName
+  );
+}
 
 }

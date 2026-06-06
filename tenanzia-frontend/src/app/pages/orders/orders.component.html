@@ -27,22 +27,22 @@
     </div>
     <div class="flex items-center gap-3">
       <app-notification-bell></app-notification-bell>
-      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')"> {{
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')"> {{
         curuntPlan?.planName || 'Free' }} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
       <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">{{
         username[0]?.toUpperCase() }}</div>
-         <!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <!-- Theme Toggle -->
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
-   
+
   </nav>
 
   <div class="p-6">
@@ -53,10 +53,16 @@
         <h1 class="text-xl font-medium text-[#F0F0F2]">Orders</h1>
         <p class="text-[#666] text-sm mt-1">{{ stats?.total || 0 }} total orders</p>
       </div>
-      <button (click)="showCreateModal = true"
-        class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
-        + New Order
-      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="exportPDF()"
+          class="bg-[#1E1E24] hover:bg-[#2A2A30] text-[#666] hover:text-[#F0F0F2] text-sm px-4 py-2 rounded-xl transition-colors">
+          ↓ Export PDF
+        </button>
+        <button (click)="showCreateModal = true"
+          class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
+          + New Order
+        </button>
+      </div>
     </div>
 
     <!-- Stats Cards -->
@@ -85,7 +91,8 @@
         <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Completed</div>
         <div class="text-2xl font-medium text-[#F0F0F2]">{{ stats.completed }}</div>
       </div>
-      <div *ngIf="isManagerOrOwner" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
+      <div *ngIf="isManagerOrOwner"
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
         <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-2">Revenue</div>
         <div class="text-2xl font-medium text-[#F0F0F2]">${{ stats.totalRevenue }}</div>
@@ -99,7 +106,7 @@
     </div>
 
 
-  <!-- Low Stock Banner
+    <!-- Low Stock Banner
   <div *ngIf="showStockIsNotHaveQuantaty" class="mb-4 bg-[#2A1F0A] border border-[#EF9F27] rounded-xl px-5 py-3">
     <div class="flex items-center gap-2 mb-2">
       <span class="text-sm text-[#EF9F27] font-medium">⚠️ Low Stock Alert</span>
@@ -187,7 +194,7 @@
           {{ selectedOrder.customerName }} →
         </div>
       </div>
-      
+
       <div class="px-6 py-4 border-b border-[#1E1E24]">
         <div class="text-xs text-[#666] uppercase tracking-wider mb-3">Items</div>
         <div *ngFor="let item of selectedOrder.items"
@@ -203,32 +210,31 @@
           <span class="text-sm font-medium text-[#F0F0F2]">${{ selectedOrder.totalAmount }}</span>
         </div>
       </div>
-       <!-- Invoice Status -->
-<div class="px-6 py-4 border-b border-[#1E1E24]" *ngIf="selectedOrder.invoices">
-  <div class="text-xs text-[#666] uppercase tracking-wider mb-3">Invoices</div>
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="text-xs px-2 py-1 rounded-full"
-        [class.bg-[#12251E]]="selectedOrder.invoices.status === 'Paid'"
-        [class.text-[#5DCAA5]]="selectedOrder.invoices.status === 'Paid'"
-        [class.bg-[#2A1F0A]]="selectedOrder.invoices.status === 'Unpaid'"
-        [class.text-[#EF9F27]]="selectedOrder.invoices.status === 'Unpaid'"
-        [class.bg-[#1E1E24]]="selectedOrder.invoices.status === 'Cancelled'"
-        [class.text-[#666]]="selectedOrder.invoices.status === 'Cancelled'">
-        {{ selectedOrder.invoices.status }}
-      </span>
-      <span class="text-xs text-[#666]">
-        Invoice #{{ selectedOrder.invoices.id }}
-      </span>
-    </div>
-    <div class="text-right">
-      <div class="text-sm text-[#F0F0F2]">${{ selectedOrder.invoices.amount }}</div>
-      <div class="text-xs text-[#666] mt-0.5" *ngIf="selectedOrder.invoices.paidAt">
-        Paid {{ selectedOrder.invoices.paidAt | date:'MMM d, y' }}
+      <!-- Invoice Status -->
+      <div class="px-6 py-4 border-b border-[#1E1E24]" *ngIf="selectedOrder.invoices">
+        <div class="text-xs text-[#666] uppercase tracking-wider mb-3">Invoices</div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xs px-2 py-1 rounded-full" [class.bg-[#12251E]]="selectedOrder.invoices.status === 'Paid'"
+              [class.text-[#5DCAA5]]="selectedOrder.invoices.status === 'Paid'"
+              [class.bg-[#2A1F0A]]="selectedOrder.invoices.status === 'Unpaid'"
+              [class.text-[#EF9F27]]="selectedOrder.invoices.status === 'Unpaid'"
+              [class.bg-[#1E1E24]]="selectedOrder.invoices.status === 'Cancelled'"
+              [class.text-[#666]]="selectedOrder.invoices.status === 'Cancelled'">
+              {{ selectedOrder.invoices.status }}
+            </span>
+            <span class="text-xs text-[#666]">
+              Invoice #{{ selectedOrder.invoices.id }}
+            </span>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-[#F0F0F2]">${{ selectedOrder.invoices.amount }}</div>
+            <div class="text-xs text-[#666] mt-0.5" *ngIf="selectedOrder.invoices.paidAt">
+              Paid {{ selectedOrder.invoices.paidAt | date:'MMM d, y' }}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
       <div class="px-6 py-4 border-b border-[#1E1E24]">
         <div class="text-xs text-[#666] uppercase tracking-wider mb-3">Status</div>
         <div class="flex items-center gap-2">
@@ -255,7 +261,7 @@
           ✅ Invoice has been created automatically
         </div>
       </div>
-     
+
 
       <div class="px-6 py-4" *ngIf="selectedOrder.notes">
         <div class="text-xs text-[#666] uppercase tracking-wider mb-2">Notes</div>
@@ -367,5 +373,3 @@
   </div>
 
 </div>
-
-

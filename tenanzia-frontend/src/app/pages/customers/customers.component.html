@@ -11,7 +11,8 @@
     <div class="flex items-center gap-1">
       <button (click)="goTo('dashboard')"
         class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button *ngIf="isManagerOrOwner" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Customers</button>
+      <button *ngIf="isManagerOrOwner"
+        class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Customers</button>
       <button (click)="goTo('tasks')"
         class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
       <button (click)="goTo('orders')"
@@ -59,10 +60,17 @@
         <h1 class="text-xl font-medium text-[#F0F0F2]">Customers</h1>
         <p class="text-[#666] text-sm mt-1">{{ customers.length }} total customers</p>
       </div>
-      <button (click)="openAddModal()"
-        class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
-        + Add Customer
-      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="exportCSV()"
+          class="bg-[#1E1E24] hover:bg-[#2A2A30] text-[#666] hover:text-[#F0F0F2] text-sm px-4 py-2 rounded-xl transition-colors flex items-center gap-2">
+          ↓ Export CSV
+        </button>
+        <button (click)="openAddModal()"
+          class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
+          + Add Customer
+        </button>
+      </div>
+
     </div>
 
     <!-- Search -->
