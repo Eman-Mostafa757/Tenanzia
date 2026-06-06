@@ -9,39 +9,47 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-            <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-              <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button *ngIf="isManagerOrOwner" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button *ngIf="isOwner" (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
 
     </div>
     <div class="flex items-center gap-3">
-                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <app-notification-bell></app-notification-bell> <!-- ← جديد -->
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{ username[0]?.toUpperCase() }}</div>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{
+        username[0]?.toUpperCase() }}</div>
       <!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
   </nav>
   <div *ngIf="limitError" class="mb-4 bg-[#3C1528] border border-[#D4537E] rounded-xl px-5 py-4">
-  <div class="text-sm text-[#ED93B1] mb-2">{{ limitError }}</div>
-  <button (click)="goTo('subscription')"
-    class="text-xs bg-[#D4537E] text-white px-4 py-2 rounded-lg hover:bg-[#C4436E] transition-colors">
-    Upgrade Now →
-  </button>
-</div>
+    <div class="text-sm text-[#ED93B1] mb-2">{{ limitError }}</div>
+    <button (click)="goTo('subscription')"
+      class="text-xs bg-[#D4537E] text-white px-4 py-2 rounded-lg hover:bg-[#C4436E] transition-colors">
+      Upgrade Now →
+    </button>
+  </div>
 
   <div class="p-6">
 
@@ -51,19 +59,16 @@
         <h1 class="text-xl font-medium text-[#F0F0F2]">Customers</h1>
         <p class="text-[#666] text-sm mt-1">{{ customers.length }} total customers</p>
       </div>
-      <button (click)="openAddModal()" class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
+      <button (click)="openAddModal()"
+        class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
         + Add Customer
       </button>
     </div>
 
     <!-- Search -->
     <div class="mb-4">
-      <input
-        [(ngModel)]="search"
-        (ngModelChange)="loadCustomers()"
-        placeholder="Search customers..."
-        class="w-full max-w-sm bg-[#111114] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors"
-      />
+      <input [(ngModel)]="search" (ngModelChange)="loadCustomers()" placeholder="Search customers..."
+        class="w-full max-w-sm bg-[#111114] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors" />
     </div>
 
     <!-- Loading -->
@@ -82,30 +87,32 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let customer of customers" class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
-           <td class="px-5 py-4">
-  <div class="flex items-center gap-3 cursor-pointer" (click)="goTo('customers/' + customer.id)">
-    <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
-      {{ customer.name[0] }}
-    </div>
-    <span class="text-sm text-[#F0F0F2] hover:text-[#D4537E] transition-colors">{{ customer.name }}</span>
-  </div>
-</td>
+          <tr *ngFor="let customer of customers"
+            class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3 cursor-pointer" (click)="goTo('customers/' + customer.id)">
+                <div
+                  class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
+                  {{ customer.name[0] }}
+                </div>
+                <span class="text-sm text-[#F0F0F2] hover:text-[#D4537E] transition-colors">{{ customer.name }}</span>
+              </div>
+            </td>
             <td class="px-5 py-4 text-sm text-[#666]">{{ customer.email || '—' }}</td>
             <td class="px-5 py-4 text-sm text-[#666]">{{ customer.phone || '—' }}</td>
             <td class="px-5 py-4">
-              <span class="text-xs px-2 py-1 rounded-full"
-                [class.bg-[#12251E]]="customer.status === 'Active'"
+              <span class="text-xs px-2 py-1 rounded-full" [class.bg-[#12251E]]="customer.status === 'Active'"
                 [class.text-[#5DCAA5]]="customer.status === 'Active'"
-                [class.bg-[#1E1E24]]="customer.status !== 'Active'"
-                [class.text-[#666]]="customer.status !== 'Active'">
+                [class.bg-[#1E1E24]]="customer.status !== 'Active'" [class.text-[#666]]="customer.status !== 'Active'">
                 {{ customer.status }}
               </span>
             </td>
             <td class="px-5 py-4">
               <div class="flex items-center gap-2">
-                <button (click)="openEditModal(customer)" class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">Edit</button>
-                <button (click)="deleteCustomer(customer.id)" class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">Delete</button>
+                <button (click)="openEditModal(customer)"
+                  class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">Edit</button>
+                <button (click)="deleteCustomer(customer.id)"
+                  class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">Delete</button>
               </div>
             </td>
           </tr>
@@ -119,36 +126,35 @@
     </div>
   </div>
   <!-- Limit Warning Banner -->
-<div *ngIf="limits && !limits.isUnlimited" class="mb-4">
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-xl px-5 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="text-xs text-[#666]">
-        Customers:
-        <span class="font-medium"
-          [class.text-[#5DCAA5]]="limits.currentCustomers < limits.maxCustomers * 0.8"
-          [class.text-[#EF9F27]]="limits.currentCustomers >= limits.maxCustomers * 0.8 && limits.currentCustomers < limits.maxCustomers"
-          [class.text-[#D4537E]]="limits.currentCustomers >= limits.maxCustomers">
-          {{ limits.currentCustomers }} / {{ limits.maxCustomers }}
-        </span>
-      </div>
-      <!-- Progress Bar -->
-      <div class="w-32 h-1.5 bg-[#1E1E24] rounded-full overflow-hidden">
-        <div class="h-full rounded-full transition-all"
-          [style.width.%]="(limits.currentCustomers / limits.maxCustomers) * 100"
-          [class.bg-[#5DCAA5]]="limits.currentCustomers < limits.maxCustomers * 0.8"
-          [class.bg-[#EF9F27]]="limits.currentCustomers >= limits.maxCustomers * 0.8 && limits.currentCustomers < limits.maxCustomers"
-          [class.bg-[#D4537E]]="limits.currentCustomers >= limits.maxCustomers">
+  <div *ngIf="limits && !limits.isUnlimited" class="mb-4">
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl px-5 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="text-xs text-[#666]">
+          Customers:
+          <span class="font-medium" [class.text-[#5DCAA5]]="limits.currentCustomers < limits.maxCustomers * 0.8"
+            [class.text-[#EF9F27]]="limits.currentCustomers >= limits.maxCustomers * 0.8 && limits.currentCustomers < limits.maxCustomers"
+            [class.text-[#D4537E]]="limits.currentCustomers >= limits.maxCustomers">
+            {{ limits.currentCustomers }} / {{ limits.maxCustomers }}
+          </span>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-32 h-1.5 bg-[#1E1E24] rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all"
+            [style.width.%]="(limits.currentCustomers / limits.maxCustomers) * 100"
+            [class.bg-[#5DCAA5]]="limits.currentCustomers < limits.maxCustomers * 0.8"
+            [class.bg-[#EF9F27]]="limits.currentCustomers >= limits.maxCustomers * 0.8 && limits.currentCustomers < limits.maxCustomers"
+            [class.bg-[#D4537E]]="limits.currentCustomers >= limits.maxCustomers">
+          </div>
         </div>
       </div>
+      <button *ngIf="limits.currentCustomers >= limits.maxCustomers * 0.8 && !limits.isUnlimited"
+        (click)="goTo('subscription')">
+        Upgrade to Pro
+      </button>
     </div>
-   <button *ngIf="limits.currentCustomers >= limits.maxCustomers * 0.8 && !limits.isUnlimited"
-  (click)="goTo('subscription')">
-  Upgrade to Pro
-</button>
   </div>
-</div>
 
-<!-- Limit Error
+  <!-- Limit Error
 <div *ngIf="limitError" class="mb-4 bg-[#3C1528] border border-[#D4537E] rounded-xl px-5 py-4">
   <div class="text-sm text-[#ED93B1] mb-2">{{ limitError }}</div>
   <button (click)="goTo('subscription')"
@@ -168,34 +174,41 @@
       <div class="space-y-4">
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Name *</label>
-          <input [(ngModel)]="form.name" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          <input [(ngModel)]="form.name"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email</label>
-          <input [(ngModel)]="form.email" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          <input [(ngModel)]="form.email"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Phone</label>
-          <input [(ngModel)]="form.phone" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          <input [(ngModel)]="form.phone"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Status</label>
-          <select [(ngModel)]="form.status" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
+          <select [(ngModel)]="form.status"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Notes</label>
-          <textarea [(ngModel)]="form.notes" rows="2" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors resize-none"></textarea>
+          <textarea [(ngModel)]="form.notes" rows="2"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors resize-none"></textarea>
         </div>
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button (click)="showModal = false" class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
+        <button (click)="showModal = false"
+          class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
           Cancel
         </button>
-        <button (click)="saveCustomer()" class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">
+        <button (click)="saveCustomer()"
+          class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">
           {{ editingCustomer ? 'Save Changes' : 'Add Customer' }}
         </button>
       </div>

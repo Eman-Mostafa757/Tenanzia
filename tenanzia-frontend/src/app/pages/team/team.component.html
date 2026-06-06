@@ -9,30 +9,38 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-                  <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Team</button>
+      <button *ngIf="isOwner" (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
-    
+
     <div class="flex items-center gap-3">
-                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <app-notification-bell></app-notification-bell> <!-- ← جديد -->
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{ username[0]?.toUpperCase() }}</div>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{
+        username[0]?.toUpperCase() }}</div>
       <!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
   </nav>
 
@@ -57,162 +65,157 @@
 
     <!-- Loading -->
     <div *ngIf="loading" class="text-center py-20 text-[#666] text-sm">Loading...</div>
-<!-- Workload Section -->
-<div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
-  <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Team Workload</div>
-  
-  <div class="space-y-3">
-    <div *ngFor="let member of workload" 
-      class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
-      (click)="goTo('team/' + member.id)">
-      
-      <!-- Avatar + Name -->
-      <div class="flex items-center gap-2 w-36 flex-shrink-0">
-        <div class="w-7 h-7 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white flex-shrink-0">
-          {{ member.username[0]?.toUpperCase() }}
+    <!-- Workload Section -->
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
+      <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Team Workload</div>
+
+      <div class="space-y-3">
+        <div *ngFor="let member of workload"
+          class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
+          (click)="goTo('team/' + member.id)">
+
+          <!-- Avatar + Name -->
+          <div class="flex items-center gap-2 w-36 flex-shrink-0">
+            <div
+              class="w-7 h-7 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white flex-shrink-0">
+              {{ member.username[0]?.toUpperCase() }}
+            </div>
+            <span class="text-xs text-[#F0F0F2] truncate">{{ member.username }}</span>
+          </div>
+
+          <!-- Activity Dot -->
+          <div class="w-1.5 h-1.5 rounded-full flex-shrink-0" [class]="getActivityDot(member.activityStatus)"></div>
+
+          <!-- Progress Bar -->
+          <div class="flex-1 h-2 bg-[#1E1E24] rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500"
+              [class]="getWorkloadColor(member.workloadLevel)" [style.width.%]="getWorkloadWidth(member.activeTasks)">
+            </div>
+          </div>
+
+          <!-- Tasks Count -->
+          <div class="text-xs text-[#666] w-20 flex-shrink-0">
+            {{ member.activeTasks }} active
+          </div>
+
+          <!-- Workload Badge -->
+          <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0"
+            [class.bg-[#1E1E24]]="member.workloadLevel === 'Free'" [class.text-[#666]]="member.workloadLevel === 'Free'"
+            [class.bg-[#12251E]]="member.workloadLevel === 'Normal'"
+            [class.text-[#5DCAA5]]="member.workloadLevel === 'Normal'"
+            [class.bg-[#2A1F0A]]="member.workloadLevel === 'Heavy'"
+            [class.text-[#EF9F27]]="member.workloadLevel === 'Heavy'"
+            [class.bg-[#3C1528]]="member.workloadLevel === 'Overloaded'"
+            [class.text-[#ED93B1]]="member.workloadLevel === 'Overloaded'">
+            {{ member.workloadLevel }}
+          </span>
+
+          <!-- Completion Rate -->
+          <div class="text-xs text-[#666] w-12 text-right flex-shrink-0">
+            {{ member.completionRate }}%
+          </div>
+
+          <!-- Overdue Warning -->
+          <div class="w-4 flex-shrink-0">
+            <span *ngIf="member.overdueTasks > 0" class="text-[#D4537E] text-xs" title="Has overdue tasks">⚠</span>
+          </div>
+
         </div>
-        <span class="text-xs text-[#F0F0F2] truncate">{{ member.username }}</span>
       </div>
 
-      <!-- Activity Dot -->
-      <div class="w-1.5 h-1.5 rounded-full flex-shrink-0" [class]="getActivityDot(member.activityStatus)"></div>
-
-      <!-- Progress Bar -->
-      <div class="flex-1 h-2 bg-[#1E1E24] rounded-full overflow-hidden">
-        <div class="h-full rounded-full transition-all duration-500"
-          [class]="getWorkloadColor(member.workloadLevel)"
-          [style.width.%]="getWorkloadWidth(member.activeTasks)">
-        </div>
+      <!-- Legend -->
+      <div class="flex items-center gap-4 mt-4 pt-4 border-t border-[#1E1E24]">
+        <span class="text-xs text-[#666]">Workload:</span>
+        <span class="flex items-center gap-1 text-xs text-[#666]">
+          <span class="w-2 h-2 rounded-full bg-[#1E1E24]"></span> Free
+        </span>
+        <span class="flex items-center gap-1 text-xs text-[#5DCAA5]">
+          <span class="w-2 h-2 rounded-full bg-[#5DCAA5]"></span> Normal
+        </span>
+        <span class="flex items-center gap-1 text-xs text-[#EF9F27]">
+          <span class="w-2 h-2 rounded-full bg-[#EF9F27]"></span> Heavy
+        </span>
+        <span class="flex items-center gap-1 text-xs text-[#ED93B1]">
+          <span class="w-2 h-2 rounded-full bg-[#D4537E]"></span> Overloaded
+        </span>
+        <span class="flex items-center gap-1 text-xs text-[#666] ml-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#5DCAA5]"></span> Active
+          <span class="w-1.5 h-1.5 rounded-full bg-[#D4537E] ml-2"></span> Overdue
+          <span class="w-1.5 h-1.5 rounded-full bg-[#666] ml-2"></span> Idle
+        </span>
       </div>
-
-      <!-- Tasks Count -->
-      <div class="text-xs text-[#666] w-20 flex-shrink-0">
-        {{ member.activeTasks }} active
-      </div>
-
-      <!-- Workload Badge -->
-      <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0"
-        [class.bg-[#1E1E24]]="member.workloadLevel === 'Free'"
-        [class.text-[#666]]="member.workloadLevel === 'Free'"
-        [class.bg-[#12251E]]="member.workloadLevel === 'Normal'"
-        [class.text-[#5DCAA5]]="member.workloadLevel === 'Normal'"
-        [class.bg-[#2A1F0A]]="member.workloadLevel === 'Heavy'"
-        [class.text-[#EF9F27]]="member.workloadLevel === 'Heavy'"
-        [class.bg-[#3C1528]]="member.workloadLevel === 'Overloaded'"
-        [class.text-[#ED93B1]]="member.workloadLevel === 'Overloaded'">
-        {{ member.workloadLevel }}
-      </span>
-
-      <!-- Completion Rate -->
-      <div class="text-xs text-[#666] w-12 text-right flex-shrink-0">
-        {{ member.completionRate }}%
-      </div>
-
-      <!-- Overdue Warning -->
-      <div class="w-4 flex-shrink-0">
-        <span *ngIf="member.overdueTasks > 0" class="text-[#D4537E] text-xs" title="Has overdue tasks">⚠</span>
-      </div>
-
     </div>
-  </div>
-
-  <!-- Legend -->
-  <div class="flex items-center gap-4 mt-4 pt-4 border-t border-[#1E1E24]">
-    <span class="text-xs text-[#666]">Workload:</span>
-    <span class="flex items-center gap-1 text-xs text-[#666]">
-      <span class="w-2 h-2 rounded-full bg-[#1E1E24]"></span> Free
-    </span>
-    <span class="flex items-center gap-1 text-xs text-[#5DCAA5]">
-      <span class="w-2 h-2 rounded-full bg-[#5DCAA5]"></span> Normal
-    </span>
-    <span class="flex items-center gap-1 text-xs text-[#EF9F27]">
-      <span class="w-2 h-2 rounded-full bg-[#EF9F27]"></span> Heavy
-    </span>
-    <span class="flex items-center gap-1 text-xs text-[#ED93B1]">
-      <span class="w-2 h-2 rounded-full bg-[#D4537E]"></span> Overloaded
-    </span>
-    <span class="flex items-center gap-1 text-xs text-[#666] ml-4">
-      <span class="w-1.5 h-1.5 rounded-full bg-[#5DCAA5]"></span> Active
-      <span class="w-1.5 h-1.5 rounded-full bg-[#D4537E] ml-2"></span> Overdue
-      <span class="w-1.5 h-1.5 rounded-full bg-[#666] ml-2"></span> Idle
-    </span>
-  </div>
-</div>
     <!-- Members Table -->
     <div *ngIf="!loading" class="bg-[#111114] border border-[#1E1E24] rounded-xl overflow-hidden">
       <table class="w-full">
-  <thead>
-    <tr class="border-b border-[#1E1E24]">
-      <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Member</th>
-      <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Email</th>
-      <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Role</th>
-      <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let member of members"
-      class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
+        <thead>
+          <tr class="border-b border-[#1E1E24]">
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Member</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Email</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Role</th>
+            <th class="text-left text-xs text-[#666] uppercase tracking-wider px-5 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let member of members"
+            class="border-b border-[#1E1E24] last:border-0 hover:bg-[#0D0D0F] transition-colors">
 
-      <!-- Member -->
-      <td class="px-5 py-4">
-        <div class="flex items-center gap-3 cursor-pointer" (click)="goTo('team/' + member.id)">
-          <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
-            {{ member.username[0]?.toUpperCase() }}
-          </div>
-          <span class="text-sm text-[#F0F0F2] hover:text-[#D4537E] transition-colors">
-            {{ member.username }}
-          </span>
-        </div>
-      </td>
+            <!-- Member -->
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3 cursor-pointer" (click)="goTo('team/' + member.id)">
+                <div
+                  class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
+                  {{ member.username[0]?.toUpperCase() }}
+                </div>
+                <span class="text-sm text-[#F0F0F2] hover:text-[#D4537E] transition-colors">
+                  {{ member.username }}
+                </span>
+              </div>
+            </td>
 
-      <!-- Email -->
-      <td class="px-5 py-4 text-sm text-[#666]">{{ member.email }}</td>
+            <!-- Email -->
+            <td class="px-5 py-4 text-sm text-[#666]">{{ member.email }}</td>
 
-      <!-- Role Badge -->
-      <td class="px-5 py-4">
-        <span class="text-xs px-2 py-1 rounded-full"
-          [class.bg-[#3C1528]]="member.role === 'Owner'"
-          [class.text-[#ED93B1]]="member.role === 'Owner'"
-          [class.bg-[#1A1829]]="member.role === 'Manager'"
-          [class.text-[#7F77DD]]="member.role === 'Manager'"
-          [class.bg-[#12251E]]="member.role === 'Employee'"
-          [class.text-[#5DCAA5]]="member.role === 'Employee'">
-          {{ member.role }}
-        </span>
-      </td>
+            <!-- Role Badge -->
+            <td class="px-5 py-4">
+              <span class="text-xs px-2 py-1 rounded-full" [class.bg-[#3C1528]]="member.role === 'Owner'"
+                [class.text-[#ED93B1]]="member.role === 'Owner'" [class.bg-[#1A1829]]="member.role === 'Manager'"
+                [class.text-[#7F77DD]]="member.role === 'Manager'" [class.bg-[#12251E]]="member.role === 'Employee'"
+                [class.text-[#5DCAA5]]="member.role === 'Employee'">
+                {{ member.role }}
+              </span>
+            </td>
 
-      <!-- Actions -->
-      <td class="px-5 py-4">
-        <div class="flex items-center gap-3">
-          <button (click)="openAssignModal(member)"
-            class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5] transition-colors">
-            + Assign
-          </button>
-          <button (click)="openEditModal(member)"
-            class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">
-            Edit
-          </button>
-          <select
-            [ngModel]="member.role"
-            (ngModelChange)="updateRole(member.id, $event)"
-            class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg px-2 py-1 text-xs text-[#666] focus:outline-none focus:border-[#D4537E] transition-colors">
-            <option value="Owner">Owner</option>
-            <option value="Manager">Manager</option>
-            <option value="Employee">Employee</option>
-          </select>
-          <button (click)="removeUser(member.id)"
-            class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
-            Remove
-          </button>
-        </div>
-      </td>
-    </tr>
+            <!-- Actions -->
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <button (click)="openAssignModal(member)"
+                  class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5] transition-colors">
+                  + Assign
+                </button>
+                <button (click)="openEditModal(member)"
+                  class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">
+                  Edit
+                </button>
+                <select [ngModel]="member.role" (ngModelChange)="updateRole(member.id, $event)"
+                  class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg px-2 py-1 text-xs text-[#666] focus:outline-none focus:border-[#D4537E] transition-colors">
+                  <option value="Owner">Owner</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Employee">Employee</option>
+                </select>
+                <button (click)="removeUser(member.id)"
+                  class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
+                  Remove
+                </button>
+              </div>
+            </td>
+          </tr>
 
-    <tr *ngIf="members.length === 0">
-      <td colspan="4" class="text-center py-12 text-[#666] text-sm">No team members yet</td>
-    </tr>
-  </tbody>
-</table>
+          <tr *ngIf="members.length === 0">
+            <td colspan="4" class="text-center py-12 text-[#666] text-sm">No team members yet</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -230,17 +233,17 @@
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Username *</label>
           <input [(ngModel)]="form.username"
-            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email *</label>
           <input [(ngModel)]="form.email" type="email"
-            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Password *</label>
           <input [(ngModel)]="form.password" type="password"
-            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Role</label>
@@ -265,109 +268,102 @@
     </div>
   </div>
   <!-- Quick Assign Modal -->
-<div *ngIf="showAssignModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl p-6 w-full max-w-md">
+  <div *ngIf="showAssignModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl p-6 w-full max-w-md">
 
-    <h2 class="text-[#F0F0F2] font-medium mb-1">Assign Task</h2>
-    <p class="text-[#666] text-sm mb-5">
-      Assign a task to
-      <span class="text-[#D4537E]">{{ assigningMember?.username }}</span>
-    </p>
+      <h2 class="text-[#F0F0F2] font-medium mb-1">Assign Task</h2>
+      <p class="text-[#666] text-sm mb-5">
+        Assign a task to
+        <span class="text-[#D4537E]">{{ assigningMember?.username }}</span>
+      </p>
 
-    <!-- Tasks List -->
-    <div class="space-y-2 max-h-64 overflow-y-auto mb-5">
-      <div *ngFor="let task of allTasks"
-        (click)="selectedTaskId = task.id"
-        class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors"
-        [class.border-[#D4537E]]="selectedTaskId === task.id"
-        [class.bg-[#1A0A10]]="selectedTaskId === task.id"
-        [class.border-[#1E1E24]]="selectedTaskId !== task.id"
-        [class.bg-[#0D0D0F]]="selectedTaskId !== task.id"
-        [class.hover:border-[#333]]="selectedTaskId !== task.id">
+      <!-- Tasks List -->
+      <div class="space-y-2 max-h-64 overflow-y-auto mb-5">
+        <div *ngFor="let task of allTasks" (click)="selectedTaskId = task.id"
+          class="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors"
+          [class.border-[#D4537E]]="selectedTaskId === task.id" [class.bg-[#1A0A10]]="selectedTaskId === task.id"
+          [class.border-[#1E1E24]]="selectedTaskId !== task.id" [class.bg-[#0D0D0F]]="selectedTaskId !== task.id"
+          [class.hover:border-[#333]]="selectedTaskId !== task.id">
+          <div>
+            <div class="text-sm text-[#F0F0F2]">{{ task.title }}</div>
+            <div class="text-xs text-[#666] mt-0.5" *ngIf="task.assignedToUsername">
+              Currently: {{ task.assignedToUsername }}
+            </div>
+            <div class="text-xs text-[#444] mt-0.5" *ngIf="!task.assignedToUsername">
+              Unassigned
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs px-2 py-0.5 rounded-full" [class.bg-[#3C1528]]="task.priority === 'High'"
+              [class.text-[#ED93B1]]="task.priority === 'High'" [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
+              [class.text-[#EF9F27]]="task.priority === 'Medium'" [class.bg-[#12251E]]="task.priority === 'Low'"
+              [class.text-[#5DCAA5]]="task.priority === 'Low'">
+              {{ task.priority }}
+            </span>
+            <span class="text-xs text-[#D4537E]" *ngIf="selectedTaskId === task.id">✓</span>
+          </div>
+        </div>
+
+        <div *ngIf="allTasks.length === 0" class="text-center py-8 text-[#666] text-sm">
+          No active tasks available
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button (click)="showAssignModal = false"
+          class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
+          Cancel
+        </button>
+        <button (click)="assignTask()" [disabled]="!selectedTaskId"
+          class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] disabled:opacity-40 transition-colors">
+          Assign Task
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div *ngIf="showEditModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl p-6 w-full max-w-md">
+
+      <h2 class="text-[#F0F0F2] font-medium mb-1">Edit Member</h2>
+      <p class="text-[#666] text-sm mb-5">
+        Editing
+        <span class="text-[#D4537E]">{{ editingMember?.username }}</span>
+      </p>
+
+      <div class="space-y-4">
         <div>
-          <div class="text-sm text-[#F0F0F2]">{{ task.title }}</div>
-          <div class="text-xs text-[#666] mt-0.5" *ngIf="task.assignedToUsername">
-            Currently: {{ task.assignedToUsername }}
-          </div>
-          <div class="text-xs text-[#444] mt-0.5" *ngIf="!task.assignedToUsername">
-            Unassigned
-          </div>
+          <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Username</label>
+          <input [(ngModel)]="editForm.username"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs px-2 py-0.5 rounded-full"
-            [class.bg-[#3C1528]]="task.priority === 'High'"
-            [class.text-[#ED93B1]]="task.priority === 'High'"
-            [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
-            [class.text-[#EF9F27]]="task.priority === 'Medium'"
-            [class.bg-[#12251E]]="task.priority === 'Low'"
-            [class.text-[#5DCAA5]]="task.priority === 'Low'">
-            {{ task.priority }}
-          </span>
-          <span class="text-xs text-[#D4537E]" *ngIf="selectedTaskId === task.id">✓</span>
+        <div>
+          <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email</label>
+          <input [(ngModel)]="editForm.email" type="email"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
+        </div>
+        <div>
+          <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">
+            New Password
+            <span class="text-[#444] normal-case ml-1">(leave empty to keep current)</span>
+          </label>
+          <input [(ngModel)]="editForm.password" type="password" placeholder="••••••••"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
       </div>
 
-      <div *ngIf="allTasks.length === 0" class="text-center py-8 text-[#666] text-sm">
-        No active tasks available
+      <div class="flex gap-3 mt-6">
+        <button (click)="showEditModal = false"
+          class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
+          Cancel
+        </button>
+        <button (click)="saveUser()"
+          class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">
+          Save Changes
+        </button>
       </div>
-    </div>
-
-    <div class="flex gap-3">
-      <button (click)="showAssignModal = false"
-        class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
-        Cancel
-      </button>
-      <button (click)="assignTask()"
-        [disabled]="!selectedTaskId"
-        class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] disabled:opacity-40 transition-colors">
-        Assign Task
-      </button>
     </div>
   </div>
-</div>
-
-<!-- Edit Modal -->
-<div *ngIf="showEditModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl p-6 w-full max-w-md">
-
-    <h2 class="text-[#F0F0F2] font-medium mb-1">Edit Member</h2>
-    <p class="text-[#666] text-sm mb-5">
-      Editing
-      <span class="text-[#D4537E]">{{ editingMember?.username }}</span>
-    </p>
-
-    <div class="space-y-4">
-      <div>
-        <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Username</label>
-        <input [(ngModel)]="editForm.username"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
-      </div>
-      <div>
-        <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email</label>
-        <input [(ngModel)]="editForm.email" type="email"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
-      </div>
-      <div>
-        <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">
-          New Password
-          <span class="text-[#444] normal-case ml-1">(leave empty to keep current)</span>
-        </label>
-        <input [(ngModel)]="editForm.password" type="password" placeholder="••••••••"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
-      </div>
-    </div>
-
-    <div class="flex gap-3 mt-6">
-      <button (click)="showEditModal = false"
-        class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">
-        Cancel
-      </button>
-      <button (click)="saveUser()"
-        class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">
-        Save Changes
-      </button>
-    </div>
-  </div>
-</div>
 
 </div>

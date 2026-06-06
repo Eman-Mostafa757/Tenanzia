@@ -8,34 +8,33 @@
       </div>
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
-
     <div class="flex items-center gap-1">
       <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
-      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
       <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
       <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-            <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
-
-
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button *ngIf="isOwner" (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
-
     <div class="flex items-center gap-3">
-                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')"> {{ curuntPlan?.planName || 'Free' }} plan</button>
+      <app-notification-bell></app-notification-bell>
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+        {{ curuntPlan?.planName || 'Free' }} plan
+      </button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium"> {{ username[0]?.toUpperCase() }}</div>
-      <!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
+        {{ username[0]?.toUpperCase() }}
+      </div>
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()"
+        [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
   </nav>
 
@@ -45,262 +44,267 @@
   </div>
 
   <!-- Content -->
-  <div *ngIf="!loading && data" class="p-6">
+  <div *ngIf="!loading && data" class="p-6 max-w-[1400px] mx-auto w-full">
 
     <!-- Greeting -->
     <div class="mb-6">
       <h1 class="text-xl font-medium text-[#F0F0F2]">Good morning, {{ username }}</h1>
       <p class="text-[#666] text-sm mt-1">
-    <span class="text-[#D4537E]">{{ data.companyName }}</span> — Here's your business overview
-  </p>
-      <!-- <p class="text-[#666] text-sm mt-1">Here's your business overview</p> -->
+        <span class="text-[#D4537E]">{{ data.companyName }}</span> — Here's your business overview
+      </p>
     </div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-4 gap-3 mb-6">
-
-      <button class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left" (click)="goTo('customers')">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <button *ngIf="isManagerOrOwner"
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#D4537E] transition-colors"
+        (click)="goTo('customers')">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#D4537E]"></div>
         <div class="text-xs text-[#D4537E] uppercase tracking-wider mb-3">Customers</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalCustomers }}</div>
         <div class="text-xs text-[#5DCAA5] mt-2">{{ data.activeCustomers }} active</div>
       </button>
 
-      <button class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left" (click)="goTo('orders')">
+      <!-- لو Employee نخلي Orders تاخد col-span-2 -->
+      <button
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#7F77DD] transition-colors"
+        [class.col-span-2]="isEmployee"
+        (click)="goTo('orders')">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#7F77DD]"></div>
         <div class="text-xs text-[#7F77DD] uppercase tracking-wider mb-3">Orders</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalOrders }}</div>
         <div class="text-xs text-[#EF9F27] mt-2">{{ data.pendingOrders }} pending</div>
       </button>
 
-      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden">
+      <div *ngIf="isManagerOrOwner"
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#5DCAA5]"></div>
         <div class="text-xs text-[#5DCAA5] uppercase tracking-wider mb-3">Revenue</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">${{ data.totalRevenue }}</div>
         <div class="text-xs text-[#666] mt-2">{{ data.completedOrders }} completed</div>
       </div>
 
-      <button class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left" (click)="goTo('tasks')">
+      <button
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#EF9F27] transition-colors"
+        [class.col-span-2]="isEmployee"
+        (click)="goTo('tasks')">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
         <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">Tasks</div>
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalTasks }}</div>
         <div class="text-xs text-[#666] mt-2">{{ data.toDoTasks }} to do</div>
       </button>
-
     </div>
-<!-- Low Stock Alert في الـ Dashboard -->
-<div *ngIf="data.lowStockProducts?.length > 0"
-  class="bg-[#2A1F0A] border border-[#EF9F27] rounded-xl p-4 mb-4">
-  <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">
-    ⚠️ Low Stock — {{ data.lowStockProducts.length }} products need attention
-  </div>
-  <div class="flex flex-wrap gap-2">
-    <div *ngFor="let p of data.lowStockProducts"
-      class="flex items-center gap-2 bg-[#1E1E24] px-3 py-1.5 rounded-lg cursor-pointer hover:border-[#EF9F27] border border-transparent transition-colors"
-      (click)="goTo('products')">
-      <span class="text-xs text-[#F0F0F2]">{{ p.name }}</span>
-      <span class="text-xs font-medium"
-        [class.text-[#D4537E]]="p.stockQuantity === 0"
-        [class.text-[#EF9F27]]="p.stockQuantity > 0">
-        {{ p.stockQuantity === 0 ? 'Out of stock' : p.stockQuantity + ' left' }}
-      </span>
-    </div>
-  </div>
-</div>
 
-<!-- Revenue + Orders Charts -->
-<div *ngIf="chartData.length > 0" class="grid grid-cols-2 gap-3 mb-6">
-
-  <!-- Revenue Chart -->
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <div class="text-xs text-[#666] uppercase tracking-wider">Revenue</div>
-        <div class="text-sm text-[#F0F0F2] mt-1">Last 6 months</div>
+    <!-- Low Stock Alert -->
+    <div *ngIf="data.lowStockProducts?.length > 0 && isManagerOrOwner"
+      class="bg-[#2A1F0A] border border-[#EF9F27] rounded-xl p-4 mb-6">
+      <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">
+        ⚠️ Low Stock — {{ data.lowStockProducts.length }} products need attention
       </div>
-      <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-1 rounded-full">Bar</span>
-    </div>
-    <canvas #revenueChart height="120"></canvas>
-  </div>
-
-  <!-- Orders Chart -->
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <div class="text-xs text-[#666] uppercase tracking-wider">Completed Orders</div>
-        <div class="text-sm text-[#F0F0F2] mt-1">Last 6 months</div>
-      </div>
-      <span class="text-xs bg-[#12251E] text-[#5DCAA5] px-2 py-1 rounded-full">Line</span>
-    </div>
-    <canvas #ordersChart height="120"></canvas>
-  </div>
-
-</div>
-
-
-
-
-
-<!-- Top Customers + Tasks Overview -->
-<div class="grid grid-cols-2 gap-3 mb-6">
-
-  <!-- Top Customers -->
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
-    <div class="text-xs text-[#666] uppercase tracking-wider mb-4">
-      🏆 Top Customers
-    </div>
-    <div *ngFor="let customer of data.topCustomers; let i = index"
-      class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer hover:opacity-80 transition-opacity"
-      (click)="goTo('customers/' + customer.customerId)">
-
-      <!-- Rank -->
-      <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-        [class.bg-[#2A1F0A]]="i === 0"
-        [class.text-[#EF9F27]]="i === 0"
-        [class.bg-[#1E1E24]]="i !== 0"
-        [class.text-[#666]]="i !== 0">
-        {{ i + 1 }}
-      </div>
-
-      <!-- Avatar -->
-      <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
-        {{ customer.customerName[0]?.toUpperCase() }}
-      </div>
-
-      <!-- Info -->
-      <div class="flex-1">
-        <div class="text-sm text-[#F0F0F2]">{{ customer.customerName }}</div>
-        <div class="text-xs text-[#666] mt-0.5">{{ customer.totalOrders }} orders</div>
-      </div>
-
-      <!-- Amount -->
-      <div class="text-right">
-        <div class="text-sm text-[#D4537E] font-medium">${{ customer.totalSpent | number }}</div>
-        <div class="text-xs text-[#666] mt-0.5">total spent</div>
-      </div>
-
-    </div>
-
-    <div *ngIf="data.topCustomers?.length === 0"
-      class="text-center py-6 text-[#333] text-xs">
-      No completed orders yet
-    </div>
-  </div>
-
-  <!-- Tasks Overview -->
-  <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
-    <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Tasks Overview</div>
-    <div class="grid grid-cols-3 gap-3">
-      <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-xs text-[#666] uppercase tracking-wider">To Do</span>
-          <span class="text-xs text-[#D4537E] bg-[#3C1528] px-2 py-0.5 rounded-full">
-            {{ data.toDoTasks }}
+      <div class="flex flex-wrap gap-2">
+        <div *ngFor="let p of data.lowStockProducts"
+          class="flex items-center gap-2 bg-[#1E1E24] px-3 py-1.5 rounded-lg cursor-pointer hover:border-[#EF9F27] border border-transparent transition-colors"
+          (click)="goTo('products')">
+          <span class="text-xs text-[#F0F0F2]">{{ p.name }}</span>
+          <span class="text-xs font-medium"
+            [class.text-[#D4537E]]="p.stockQuantity === 0"
+            [class.text-[#EF9F27]]="p.stockQuantity > 0">
+            {{ p.stockQuantity === 0 ? 'Out of stock' : p.stockQuantity + ' left' }}
           </span>
         </div>
-        <!-- Progress Bar -->
-        <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
-          <div class="h-full bg-[#D4537E] rounded-full"
-            [style.width.%]="data.totalTasks > 0 ? (data.toDoTasks / data.totalTasks * 100) : 0">
+      </div>
+    </div>
+
+    <!-- Charts — Manager + Owner فقط -->
+    <div *ngIf="chartData.length > 0 && isManagerOrOwner" class="grid grid-cols-2 gap-4 mb-6">
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-xs text-[#666] uppercase tracking-wider">Revenue</div>
+            <div class="text-sm text-[#F0F0F2] mt-1">Last 6 months</div>
           </div>
+          <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-1 rounded-full">Bar</span>
+        </div>
+        <canvas #revenueChart height="120"></canvas>
+      </div>
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-xs text-[#666] uppercase tracking-wider">Completed Orders</div>
+            <div class="text-sm text-[#F0F0F2] mt-1">Last 6 months</div>
+          </div>
+          <span class="text-xs bg-[#12251E] text-[#5DCAA5] px-2 py-1 rounded-full">Line</span>
+        </div>
+        <canvas #ordersChart height="120"></canvas>
+      </div>
+    </div>
+
+    <!-- Top Customers + Tasks Overview — Manager + Owner -->
+    <div *ngIf="isManagerOrOwner" class="grid grid-cols-2 gap-4 mb-6">
+
+      <!-- Top Customers -->
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="text-xs text-[#666] uppercase tracking-wider mb-4">🏆 Top Customers</div>
+        <div *ngFor="let customer of data.topCustomers; let i = index"
+          class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer hover:opacity-80 transition-opacity"
+          (click)="goTo('customers/' + customer.customerId)">
+          <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+            [class.bg-[#2A1F0A]]="i === 0" [class.text-[#EF9F27]]="i === 0"
+            [class.bg-[#1E1E24]]="i !== 0" [class.text-[#666]]="i !== 0">
+            {{ i + 1 }}
+          </div>
+          <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
+            {{ customer.customerName[0]?.toUpperCase() }}
+          </div>
+          <div class="flex-1">
+            <div class="text-sm text-[#F0F0F2]">{{ customer.customerName }}</div>
+            <div class="text-xs text-[#666] mt-0.5">{{ customer.totalOrders }} orders</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-[#D4537E] font-medium">${{ customer.totalSpent | number }}</div>
+            <div class="text-xs text-[#666] mt-0.5">total spent</div>
+          </div>
+        </div>
+        <div *ngIf="data.topCustomers?.length === 0" class="text-center py-6 text-[#333] text-xs">
+          No completed orders yet
         </div>
       </div>
-      <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-xs text-[#666] uppercase tracking-wider">In Progress</span>
-          <span class="text-xs text-[#7F77DD] bg-[#1A1829] px-2 py-0.5 rounded-full">
-            {{ data.inProgressTasks }}
-          </span>
-        </div>
-        <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
-          <div class="h-full bg-[#7F77DD] rounded-full"
-            [style.width.%]="data.totalTasks > 0 ? (data.inProgressTasks / data.totalTasks * 100) : 0">
+
+      <!-- Tasks Overview -->
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Tasks Overview</div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs text-[#666] uppercase tracking-wider">To Do</span>
+              <span class="text-xs text-[#D4537E] bg-[#3C1528] px-2 py-0.5 rounded-full">{{ data.toDoTasks }}</span>
+            </div>
+            <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
+              <div class="h-full bg-[#D4537E] rounded-full"
+                [style.width.%]="data.totalTasks > 0 ? (data.toDoTasks / data.totalTasks * 100) : 0"></div>
+            </div>
+          </div>
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs text-[#666] uppercase tracking-wider">In Progress</span>
+              <span class="text-xs text-[#7F77DD] bg-[#1A1829] px-2 py-0.5 rounded-full">{{ data.inProgressTasks }}</span>
+            </div>
+            <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
+              <div class="h-full bg-[#7F77DD] rounded-full"
+                [style.width.%]="data.totalTasks > 0 ? (data.inProgressTasks / data.totalTasks * 100) : 0"></div>
+            </div>
+          </div>
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs text-[#666] uppercase tracking-wider">Done</span>
+              <span class="text-xs text-[#5DCAA5] bg-[#12251E] px-2 py-0.5 rounded-full">{{ data.completedTasks }}</span>
+            </div>
+            <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
+              <div class="h-full bg-[#5DCAA5] rounded-full"
+                [style.width.%]="data.totalTasks > 0 ? (data.completedTasks / data.totalTasks * 100) : 0"></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-xs text-[#666] uppercase tracking-wider">Done</span>
-          <span class="text-xs text-[#5DCAA5] bg-[#12251E] px-2 py-0.5 rounded-full">
-            {{ data.completedTasks }}
-          </span>
-        </div>
-        <div class="h-1 bg-[#1E1E24] rounded-full overflow-hidden">
-          <div class="h-full bg-[#5DCAA5] rounded-full"
-            [style.width.%]="data.totalTasks > 0 ? (data.completedTasks / data.totalTasks * 100) : 0">
+        <div class="mt-4 pt-4 border-t border-[#1E1E24]">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs text-[#666]">Overall completion</span>
+            <span class="text-xs text-[#F0F0F2]">
+              {{ data.totalTasks > 0 ? ((data.completedTasks / data.totalTasks) * 100 | number:'1.0-0') : 0 }}%
+            </span>
           </div>
+          <div class="h-2 bg-[#1E1E24] rounded-full overflow-hidden">
+            <div class="h-full bg-[#5DCAA5] rounded-full transition-all duration-500"
+              [style.width.%]="data.totalTasks > 0 ? (data.completedTasks / data.totalTasks * 100) : 0"></div>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button (click)="goTo('tasks')"
+            class="flex-1 bg-[#0D0D0F] border border-[#1E1E24] text-xs text-[#666] py-2 rounded-lg hover:text-[#F0F0F2] hover:border-[#D4537E] transition-colors">
+            View Kanban →
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Overall Progress -->
-    <div class="mt-4 pt-4 border-t border-[#1E1E24]">
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-xs text-[#666]">Overall completion</span>
-        <span class="text-xs text-[#F0F0F2]">
-          {{ data.totalTasks > 0 ? ((data.completedTasks / data.totalTasks) * 100 | number:'1.0-0') : 0 }}%
-        </span>
-      </div>
-      <div class="h-2 bg-[#1E1E24] rounded-full overflow-hidden">
-        <div class="h-full bg-[#5DCAA5] rounded-full transition-all duration-500"
-          [style.width.%]="data.totalTasks > 0 ? (data.completedTasks / data.totalTasks * 100) : 0">
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Links -->
-    <div class="flex gap-2 mt-4">
-      <button (click)="goTo('tasks')"
-        class="flex-1 bg-[#0D0D0F] border border-[#1E1E24] text-xs text-[#666] py-2 rounded-lg hover:text-[#F0F0F2] hover:border-[#D4537E] transition-colors">
-        View Kanban →
-      </button>
-    </div>
-  </div>
-
-</div>
-
-
-
-
-    <!-- Row 2 -->
-    <div class="grid grid-cols-3 gap-3 mb-6">
+    <!-- Recent Orders + Recent Customers / My Tasks -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
 
       <!-- Recent Orders -->
-      <div class="col-span-2 bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
         <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Recent Orders</div>
-        <div *ngFor="let order of data.recentOrders" class="flex items-center justify-between py-3 border-b border-[#1E1E24] last:border-0">
+        <div *ngFor="let order of data.recentOrders"
+          class="flex items-center justify-between py-3 border-b border-[#1E1E24] last:border-0">
           <div>
             <div class="text-sm text-[#F0F0F2]">{{ order.customerName }}</div>
             <div class="text-xs text-[#666] mt-0.5">Order #{{ order.id }}</div>
           </div>
           <div class="text-right">
-            <div class="text-sm text-[#F0F0F2]">${{ order.totalAmount }}</div>
-            <div class="text-xs mt-0.5"
-              [class.text-amber-400]="order.status === 'Pending'"
-              [class.text-teal-400]="order.status === 'Completed'"
-              [class.text-purple-400]="order.status === 'Processing'">
+            <div *ngIf="isManagerOrOwner" class="text-sm text-[#F0F0F2] mb-1">${{ order.totalAmount }}</div>
+            <span class="text-xs px-2 py-0.5 rounded-full"
+              [class.bg-[#12251E]]="order.status === 'Completed'"
+              [class.text-[#5DCAA5]]="order.status === 'Completed'"
+              [class.bg-[#1A1829]]="order.status === 'Processing'"
+              [class.text-[#7F77DD]]="order.status === 'Processing'"
+              [class.bg-[#2A1F0A]]="order.status === 'Pending'"
+              [class.text-[#EF9F27]]="order.status === 'Pending'"
+              [class.bg-[#1E1E24]]="order.status === 'Cancelled'"
+              [class.text-[#666]]="order.status === 'Cancelled'">
               {{ order.status }}
-            </div>
+            </span>
           </div>
+        </div>
+        <div *ngIf="!data.recentOrders?.length" class="text-center py-6 text-[#333] text-xs">
+          No orders yet
         </div>
       </div>
 
-      <!-- Recent Customers -->
-      <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5" >
-        <div class="text-xs text-[#666] uppercase tracking-wider mb-4" >Recent Customers</div>
-        <div *ngFor="let customer of data.recentCustomers" class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer"  (click)="goTo('customers/' + customer.id)">
-          <div class="w-8 h-8 rounded-full bg-[#1E1E24] flex items-center justify-center text-xs text-[#F0F0F2] flex-shrink-0">
-            {{ customer.name[0] }}
+      <!-- Recent Customers — Manager + Owner -->
+      <div *ngIf="isManagerOrOwner" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Recent Customers</div>
+        <div *ngFor="let customer of data.recentCustomers"
+          class="flex items-center gap-3 py-3 border-b border-[#1E1E24] last:border-0 cursor-pointer hover:opacity-80 transition-opacity"
+          (click)="goTo('customers/' + customer.id)">
+          <div class="w-8 h-8 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white font-medium">
+            {{ customer.name[0]?.toUpperCase() }}
           </div>
           <div>
             <div class="text-sm text-[#F0F0F2]">{{ customer.name }}</div>
             <div class="text-xs text-[#666]">{{ customer.email }}</div>
           </div>
         </div>
+        <div *ngIf="!data.recentCustomers?.length" class="text-center py-6 text-[#333] text-xs">
+          No customers yet
+        </div>
+      </div>
+
+      <!-- My Tasks — Employee فقط -->
+      <div *ngIf="isEmployee" class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
+        <div class="text-xs text-[#666] uppercase tracking-wider mb-4">My Tasks</div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-4 text-center">
+            <div class="text-2xl font-medium text-[#D4537E]">{{ data.toDoTasks }}</div>
+            <div class="text-xs text-[#666] mt-1">To Do</div>
+          </div>
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-4 text-center">
+            <div class="text-2xl font-medium text-[#7F77DD]">{{ data.inProgressTasks }}</div>
+            <div class="text-xs text-[#666] mt-1">In Progress</div>
+          </div>
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-4 text-center">
+            <div class="text-2xl font-medium text-[#5DCAA5]">{{ data.completedTasks }}</div>
+            <div class="text-xs text-[#666] mt-1">Completed</div>
+          </div>
+          <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-4 text-center">
+            <div class="text-2xl font-medium text-[#F0F0F2]">{{ data.totalTasks }}</div>
+            <div class="text-xs text-[#666] mt-1">Total</div>
+          </div>
+        </div>
+        <button (click)="goTo('tasks')"
+          class="w-full bg-[#0D0D0F] border border-[#1E1E24] text-xs text-[#666] py-2.5 rounded-lg hover:text-[#F0F0F2] hover:border-[#D4537E] transition-colors">
+          View My Kanban →
+        </button>
       </div>
 
     </div>
-
 
   </div>
 </div>

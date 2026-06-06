@@ -11,7 +11,7 @@ import { NotificationBellComponent } from '../../components/notification-bell/no
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule,NotificationBellComponent],
+  imports: [CommonModule, FormsModule, NotificationBellComponent],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
@@ -21,8 +21,7 @@ export class SettingsComponent implements OnInit {
   activeTab = 'profile';
   success = '';
   error = '';
-  isOwner = false;
-curuntPlan:any=null;
+  curuntPlan: any = null;
   profileForm = {
     username: '',
     email: '',
@@ -34,18 +33,24 @@ curuntPlan:any=null;
   companyForm = {
     name: ''
   };
-
+  isOwner = false;
+  isManager = false;
+  isEmployee = false;
+  isManagerOrOwner = false;
   constructor(
     private settingsService: SettingsService,
     private authService: AuthService,
     private router: Router,
-    private subscriptionService:SubscriptionService,
-        public themeService:ThemeService
-    
-  ) {}
+    private subscriptionService: SubscriptionService,
+    public themeService: ThemeService
+
+  ) { }
 
   ngOnInit() {
-    this.isOwner = this.authService.getRole() === 'Owner';
+    this.isOwner = this.authService.isOwner();
+    this.isManager = this.authService.isManager();
+    this.isEmployee = this.authService.isEmployee();
+    this.isManagerOrOwner = this.authService.isManagerOrOwner();
     this.loadMe();
     this.getCurrentPlan();
   }
@@ -123,10 +128,10 @@ curuntPlan:any=null;
   logout() { this.authService.logout(); }
   goTo(page: string) { this.router.navigate([`/${page}`]); }
 
-    getCurrentPlan()
-  {
+  getCurrentPlan() {
     this.subscriptionService.getCurrent().subscribe({
-      next :(res)=> { this.curuntPlan=res;
+      next: (res) => {
+        this.curuntPlan = res;
 
       }
     })

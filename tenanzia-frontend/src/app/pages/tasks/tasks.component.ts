@@ -12,7 +12,7 @@ import { SubscriptionService } from '../../services/subscription.service';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule,NotificationBellComponent],
+  imports: [CommonModule, FormsModule, NotificationBellComponent],
   templateUrl: './tasks.component.html',
 })
 export class TasksComponent implements OnInit {
@@ -22,49 +22,53 @@ export class TasksComponent implements OnInit {
   showModal = false;
   filterMode = 'all';
   users: any[] = [];
-isManager = false;
 
- form = {
-  title: '',
-  description: '',
-  priority: 'Medium',
-  dueDate: '',
-  assignedToUserId: null as number | null
-};
-showDetailsModal = false;
-selectedTask: any = null;
-newComment = '';
-currentUserId = 0;
-username = '';
-curuntPlan:any=null;
+  form = {
+    title: '',
+    description: '',
+    priority: 'Medium',
+    dueDate: '',
+    assignedToUserId: null as number | null
+  };
+  showDetailsModal = false;
+  selectedTask: any = null;
+  newComment = '';
+  currentUserId = 0;
+  username = '';
+  curuntPlan: any = null;
+  isOwner = false;
+  isManager = false;
+  isEmployee = false;
+  isManagerOrOwner = false;
 
   constructor(
     private tasksService: TasksService,
     private authService: AuthService,
     private usersService: UsersService,
     private router: Router,
-      public themeService: ThemeService,
-      private subscriptionService:SubscriptionService,
+    public themeService: ThemeService,
+    private subscriptionService: SubscriptionService,
 
-  ) {}
+  ) { }
 
- ngOnInit() {
-        this.username = this.authService.getUsername();
-this.getCurrentPlan();
+  ngOnInit() {
+    this.isOwner = this.authService.isOwner();
+    this.isManager = this.authService.isManager();
+    this.isEmployee = this.authService.isEmployee();
+    this.isManagerOrOwner = this.authService.isManagerOrOwner();
+    this.username = this.authService.getUsername();
+    this.getCurrentPlan();
+    // حمّلي الـ users دايماً مش بس للـ Manager
+    this.usersService.getTenantUsers().subscribe({
+      next: (res) => this.users = res
+    });
 
-  this.isManager = this.authService.isManager();
-
-  // حمّلي الـ users دايماً مش بس للـ Manager
-  this.usersService.getTenantUsers().subscribe({
-    next: (res) => this.users = res
-  });
-
-  this.loadKanban();
-}
-getUserName(id: number): string {
-  const user = this.users.find(u => u.id === id);
-  return user ? user.username : '';
-}
+    this.loadKanban();
+  }
+  getUserName(id: number): string {
+    const user = this.users.find(u => u.id === id);
+    return user ? user.username : '';
+  }
 
   loadKanban() {
     this.loading = true;
@@ -78,21 +82,21 @@ getUserName(id: number): string {
   }
 
   createTask() {
-  if (!this.form.title) return;
-  this.tasksService.create(this.form).subscribe({
-    next: () => {
-      this.showModal = false;
-      this.form = { 
-        title: '', 
-        description: '', 
-        priority: 'Medium', 
-        dueDate: '', 
-        assignedToUserId: null  // ← جديد
-      };
-      this.loadKanban();
-    }
-  });
-}
+    if (!this.form.title) return;
+    this.tasksService.create(this.form).subscribe({
+      next: () => {
+        this.showModal = false;
+        this.form = {
+          title: '',
+          description: '',
+          priority: 'Medium',
+          dueDate: '',
+          assignedToUserId: null  // ← جديد
+        };
+        this.loadKanban();
+      }
+    });
+  }
 
   moveTask(task: any, newStatus: string) {
     this.tasksService.updateStatus(task.id, newStatus).subscribe({
@@ -100,53 +104,53 @@ getUserName(id: number): string {
     });
   }
 
- deleteTask(id: number) {
-  if (confirm('Delete permanently?')) {
-    this.tasksService.delete(id).subscribe({
+  deleteTask(id: number) {
+    if (confirm('Delete permanently?')) {
+      this.tasksService.delete(id).subscribe({
+        next: () => this.loadKanban()
+      });
+    }
+  }
+  cancelTask(id: number) {
+    this.tasksService.updateStatus(id, 'Cancelled').subscribe({
       next: () => this.loadKanban()
     });
   }
-}
-cancelTask(id: number) {
-  this.tasksService.updateStatus(id, 'Cancelled').subscribe({
-    next: () => this.loadKanban()
-  });
-}
 
   logout() { this.authService.logout(); }
   goTo(page: string) { this.router.navigate([`/${page}`]); }
 
 
   openTaskDetails(task: any) {
-  this.tasksService.getTaskDetails(task.id).subscribe({
-    next: (res) => {
-      this.selectedTask = res;
-      this.showDetailsModal = true;
-    }
-  });
-}
+    this.tasksService.getTaskDetails(task.id).subscribe({
+      next: (res) => {
+        this.selectedTask = res;
+        this.showDetailsModal = true;
+      }
+    });
+  }
 
-addComment() {
-  if (!this.newComment.trim() || !this.selectedTask) return;
-  this.tasksService.addComment(this.selectedTask.id, this.newComment).subscribe({
-    next: () => {
-      this.newComment = '';
-      this.openTaskDetails(this.selectedTask);
-    }
-  });
-}
+  addComment() {
+    if (!this.newComment.trim() || !this.selectedTask) return;
+    this.tasksService.addComment(this.selectedTask.id, this.newComment).subscribe({
+      next: () => {
+        this.newComment = '';
+        this.openTaskDetails(this.selectedTask);
+      }
+    });
+  }
 
-deleteComment(commentId: number) {
-  if (!this.selectedTask) return;
-  this.tasksService.deleteComment(this.selectedTask.id, commentId).subscribe({
-    next: () => this.openTaskDetails(this.selectedTask)
-  });
-}
+  deleteComment(commentId: number) {
+    if (!this.selectedTask) return;
+    this.tasksService.deleteComment(this.selectedTask.id, commentId).subscribe({
+      next: () => this.openTaskDetails(this.selectedTask)
+    });
+  }
 
-  getCurrentPlan()
-  {
+  getCurrentPlan() {
     this.subscriptionService.getCurrent().subscribe({
-      next :(res)=> { this.curuntPlan=res;
+      next: (res) => {
+        this.curuntPlan = res;
 
       }
     })

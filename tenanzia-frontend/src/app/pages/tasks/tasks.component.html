@@ -9,31 +9,38 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
       <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-                  <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button *ngIf="isOwner" (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
     <div class="flex items-center gap-3">
-                <app-notification-bell></app-notification-bell>  <!-- ← جديد -->
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <app-notification-bell></app-notification-bell> <!-- ← جديد -->
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-  <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
-  {{ username[0]?.toUpperCase() }}
-</div>
-<!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
+        {{ username[0]?.toUpperCase() }}
+      </div>
+      <!-- Theme Toggle -->
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
   </nav>
 
@@ -45,7 +52,8 @@
         <h1 class="text-xl font-medium text-[#F0F0F2]">Tasks</h1>
         <p class="text-[#666] text-sm mt-1">Kanban board</p>
       </div>
-      <button (click)="showModal = true" class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
+      <button (click)="showModal = true"
+        class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-sm px-4 py-2 rounded-xl transition-colors">
         + Add Task
       </button>
     </div>
@@ -60,7 +68,8 @@
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs text-[#666] uppercase tracking-wider">To Do</span>
-          <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-0.5 rounded-full">{{ kanban.toDo?.length || 0 }}</span>
+          <span class="text-xs bg-[#3C1528] text-[#ED93B1] px-2 py-0.5 rounded-full">{{ kanban.toDo?.length || 0
+            }}</span>
         </div>
         <div *ngFor="let task of kanban.toDo" class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2">
           <div class="flex items-center justify-between mb-2">
@@ -75,18 +84,16 @@
             <span class="text-[10px] text-[#666]">{{ getUserName(task.assignedToUserId) }}</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-xs px-2 py-0.5 rounded-full"
-              [class.bg-[#3C1528]]="task.priority === 'High'"
-              [class.text-[#ED93B1]]="task.priority === 'High'"
-              [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
-              [class.text-[#EF9F27]]="task.priority === 'Medium'"
-              [class.bg-[#12251E]]="task.priority === 'Low'"
+            <span class="text-xs px-2 py-0.5 rounded-full" [class.bg-[#3C1528]]="task.priority === 'High'"
+              [class.text-[#ED93B1]]="task.priority === 'High'" [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
+              [class.text-[#EF9F27]]="task.priority === 'Medium'" [class.bg-[#12251E]]="task.priority === 'Low'"
               [class.text-[#5DCAA5]]="task.priority === 'Low'">
               {{ task.priority }}
             </span>
             <div class="flex gap-2">
               <button (click)="openTaskDetails(task)" class="text-xs text-[#666] hover:text-[#F0F0F2]">Details</button>
-              <button (click)="moveTask(task, 'InProgress')" class="text-xs text-[#7F77DD] hover:text-[#9F97ED]">→</button>
+              <button (click)="moveTask(task, 'InProgress')"
+                class="text-xs text-[#7F77DD] hover:text-[#9F97ED]">→</button>
               <button (click)="cancelTask(task.id)" class="text-xs text-[#666] hover:text-[#EF9F27]">Cancel</button>
             </div>
           </div>
@@ -98,7 +105,8 @@
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs text-[#666] uppercase tracking-wider">In Progress</span>
-          <span class="text-xs bg-[#1A1829] text-[#7F77DD] px-2 py-0.5 rounded-full">{{ kanban.inProgress?.length || 0 }}</span>
+          <span class="text-xs bg-[#1A1829] text-[#7F77DD] px-2 py-0.5 rounded-full">{{ kanban.inProgress?.length || 0
+            }}</span>
         </div>
         <div *ngFor="let task of kanban.inProgress" class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2">
           <div class="flex items-center justify-between mb-2">
@@ -113,19 +121,17 @@
             <span class="text-[10px] text-[#666]">{{ getUserName(task.assignedToUserId) }}</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-xs px-2 py-0.5 rounded-full"
-              [class.bg-[#3C1528]]="task.priority === 'High'"
-              [class.text-[#ED93B1]]="task.priority === 'High'"
-              [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
-              [class.text-[#EF9F27]]="task.priority === 'Medium'"
-              [class.bg-[#12251E]]="task.priority === 'Low'"
+            <span class="text-xs px-2 py-0.5 rounded-full" [class.bg-[#3C1528]]="task.priority === 'High'"
+              [class.text-[#ED93B1]]="task.priority === 'High'" [class.bg-[#2A1F0A]]="task.priority === 'Medium'"
+              [class.text-[#EF9F27]]="task.priority === 'Medium'" [class.bg-[#12251E]]="task.priority === 'Low'"
               [class.text-[#5DCAA5]]="task.priority === 'Low'">
               {{ task.priority }}
             </span>
             <div class="flex gap-2">
               <button (click)="openTaskDetails(task)" class="text-xs text-[#666] hover:text-[#F0F0F2]">Details</button>
               <button (click)="moveTask(task, 'ToDo')" class="text-xs text-[#666] hover:text-[#F0F0F2]">←</button>
-              <button (click)="moveTask(task, 'Completed')" class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5]">→</button>
+              <button (click)="moveTask(task, 'Completed')"
+                class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5]">→</button>
               <button (click)="cancelTask(task.id)" class="text-xs text-[#666] hover:text-[#EF9F27]">Cancel</button>
             </div>
           </div>
@@ -137,9 +143,11 @@
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs text-[#666] uppercase tracking-wider">Completed</span>
-          <span class="text-xs bg-[#12251E] text-[#5DCAA5] px-2 py-0.5 rounded-full">{{ kanban.completed?.length || 0 }}</span>
+          <span class="text-xs bg-[#12251E] text-[#5DCAA5] px-2 py-0.5 rounded-full">{{ kanban.completed?.length || 0
+            }}</span>
         </div>
-        <div *ngFor="let task of kanban.completed" class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2 opacity-70">
+        <div *ngFor="let task of kanban.completed"
+          class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2 opacity-70">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm text-[#F0F0F2] line-through">{{ task.title }}</div>
             <div *ngIf="task.hasUnread" class="w-2 h-2 rounded-full bg-[#D4537E] flex-shrink-0"></div>
@@ -165,9 +173,11 @@
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs text-[#666] uppercase tracking-wider">Cancelled</span>
-          <span class="text-xs bg-[#1E1E24] text-[#666] px-2 py-0.5 rounded-full">{{ kanban.cancelled?.length || 0 }}</span>
+          <span class="text-xs bg-[#1E1E24] text-[#666] px-2 py-0.5 rounded-full">{{ kanban.cancelled?.length || 0
+            }}</span>
         </div>
-        <div *ngFor="let task of kanban.cancelled" class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2 opacity-50">
+        <div *ngFor="let task of kanban.cancelled"
+          class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3 mb-2 opacity-50">
           <div class="flex items-center justify-between mb-2">
             <div class="text-sm text-[#666] line-through">{{ task.title }}</div>
             <div *ngIf="task.hasUnread" class="w-2 h-2 rounded-full bg-[#D4537E] flex-shrink-0"></div>
@@ -180,7 +190,8 @@
           </div>
           <div class="flex gap-2">
             <button (click)="openTaskDetails(task)" class="text-xs text-[#666] hover:text-[#F0F0F2]">Details</button>
-            <button (click)="moveTask(task, 'ToDo')" class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5]">Restore</button>
+            <button (click)="moveTask(task, 'ToDo')"
+              class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5]">Restore</button>
             <button (click)="deleteTask(task.id)" class="text-xs text-[#D4537E] hover:text-[#E4638E]">Delete</button>
           </div>
         </div>
@@ -197,15 +208,18 @@
       <div class="space-y-4">
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Title *</label>
-          <input [(ngModel)]="form.title" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          <input [(ngModel)]="form.title"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Description</label>
-          <textarea [(ngModel)]="form.description" rows="2" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors resize-none"></textarea>
+          <textarea [(ngModel)]="form.description" rows="2"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors resize-none"></textarea>
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Priority</label>
-          <select [(ngModel)]="form.priority" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
+          <select [(ngModel)]="form.priority"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
@@ -213,19 +227,24 @@
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Due Date</label>
-          <input type="date" [(ngModel)]="form.dueDate" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+          <input type="date" [(ngModel)]="form.dueDate"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div *ngIf="isManager">
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Assign To</label>
-          <select [(ngModel)]="form.assignedToUserId" class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
+          <select [(ngModel)]="form.assignedToUserId"
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
             <option [ngValue]="null">Unassigned</option>
             <option *ngFor="let user of users" [ngValue]="user.id">{{ user.username }}</option>
           </select>
         </div>
       </div>
       <div class="flex gap-3 mt-6">
-        <button (click)="showModal = false" class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">Cancel</button>
-        <button (click)="createTask()" class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">Add Task</button>
+        <button (click)="showModal = false"
+          class="flex-1 bg-[#1E1E24] text-[#666] text-sm py-2.5 rounded-xl hover:text-[#F0F0F2] transition-colors">Cancel</button>
+        <button (click)="createTask()"
+          class="flex-1 bg-[#D4537E] text-white text-sm py-2.5 rounded-xl hover:bg-[#C4436E] transition-colors">Add
+          Task</button>
       </div>
     </div>
   </div>
@@ -242,8 +261,7 @@
         <button (click)="showDetailsModal = false" class="text-[#666] hover:text-[#F0F0F2] text-lg">✕</button>
       </div>
       <div class="flex items-center gap-4 px-6 py-3 border-b border-[#1E1E24]">
-        <span class="text-xs px-2 py-1 rounded-full"
-          [class.bg-[#3C1528]]="selectedTask.priority === 'High'"
+        <span class="text-xs px-2 py-1 rounded-full" [class.bg-[#3C1528]]="selectedTask.priority === 'High'"
           [class.text-[#ED93B1]]="selectedTask.priority === 'High'"
           [class.bg-[#2A1F0A]]="selectedTask.priority === 'Medium'"
           [class.text-[#EF9F27]]="selectedTask.priority === 'Medium'"
@@ -252,34 +270,42 @@
           {{ selectedTask.priority }}
         </span>
         <span class="text-xs px-2 py-1 rounded-full bg-[#1A1829] text-[#7F77DD]">{{ selectedTask.status }}</span>
-        <span class="text-xs text-[#666]" *ngIf="selectedTask.assignedToUsername">👤 {{ selectedTask.assignedToUsername }}</span>
-        <span class="text-xs text-[#666]" *ngIf="selectedTask.dueDate">📅 {{ selectedTask.dueDate | date:'MMM d, y' }}</span>
+        <span class="text-xs text-[#666]" *ngIf="selectedTask.assignedToUsername">👤 {{ selectedTask.assignedToUsername
+          }}</span>
+        <span class="text-xs text-[#666]" *ngIf="selectedTask.dueDate">📅 {{ selectedTask.dueDate | date:'MMM d, y'
+          }}</span>
       </div>
       <div class="grid grid-cols-2 divide-x divide-[#1E1E24]">
         <div class="p-5">
-          <div class="text-xs text-[#666] uppercase tracking-wider mb-4">💬 Comments ({{ selectedTask.comments?.length || 0 }})</div>
+          <div class="text-xs text-[#666] uppercase tracking-wider mb-4">💬 Comments ({{ selectedTask.comments?.length
+            || 0 }})</div>
           <div class="space-y-3 mb-4 max-h-64 overflow-y-auto">
-            <div *ngFor="let comment of selectedTask.comments" class="bg-[#0D0D0F] border border-[#1E1E24] rounded-xl p-3">
+            <div *ngFor="let comment of selectedTask.comments"
+              class="bg-[#0D0D0F] border border-[#1E1E24] rounded-xl p-3">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-[#D4537E] flex items-center justify-center text-[10px] text-white">
+                  <div
+                    class="w-6 h-6 rounded-full bg-[#D4537E] flex items-center justify-center text-[10px] text-white">
                     {{ comment.username[0]?.toUpperCase() }}
                   </div>
                   <span class="text-xs text-[#F0F0F2] font-medium">{{ comment.username }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-[10px] text-[#444]">{{ comment.createdAt | date:'MMM d, h:mm a' }}</span>
-                  <button *ngIf="comment.userId === currentUserId" (click)="deleteComment(comment.id)" class="text-[10px] text-[#D4537E] hover:text-[#E4638E]">✕</button>
+                  <button *ngIf="comment.userId === currentUserId" (click)="deleteComment(comment.id)"
+                    class="text-[10px] text-[#D4537E] hover:text-[#E4638E]">✕</button>
                 </div>
               </div>
               <p class="text-xs text-[#AAA]">{{ comment.content }}</p>
             </div>
-            <div *ngIf="selectedTask.comments?.length === 0" class="text-center py-6 text-[#333] text-xs">No comments yet</div>
+            <div *ngIf="selectedTask.comments?.length === 0" class="text-center py-6 text-[#333] text-xs">No comments
+              yet</div>
           </div>
           <div class="flex gap-2">
             <input [(ngModel)]="newComment" placeholder="Add a comment..." (keyup.enter)="addComment()"
-              class="flex-1 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-xs placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors"/>
-            <button (click)="addComment()" class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-xs px-3 py-2 rounded-xl transition-colors">Send</button>
+              class="flex-1 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-xs placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors" />
+            <button (click)="addComment()"
+              class="bg-[#D4537E] hover:bg-[#C4436E] text-white text-xs px-3 py-2 rounded-xl transition-colors">Send</button>
           </div>
         </div>
         <div class="p-5">
@@ -292,7 +318,8 @@
                 <span class="text-[10px] text-[#444]">{{ activity.createdAt | date:'MMM d, y — h:mm a' }}</span>
               </div>
             </div>
-            <div *ngIf="selectedTask.activities?.length === 0" class="text-center py-6 text-[#333] text-xs">No activity yet</div>
+            <div *ngIf="selectedTask.activities?.length === 0" class="text-center py-6 text-[#333] text-xs">No activity
+              yet</div>
           </div>
         </div>
       </div>

@@ -13,22 +13,26 @@ import { authGuard } from './guards/auth.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { SubscriptionComponent } from './pages/subscription/subscription.component';
 import { ProductsComponent } from './pages/products/products.component';
-
+import { managerGuard } from './guards/manager.guard';
+import { ownerGuard } from './guards/owner.guard';
 export const routes: Routes = [
-     { path: 'login', component: LoginComponent },
-       { path: 'dashboard', component: DashboardComponent , canActivate: [authGuard] },
-       { path: 'customers', component: CustomersComponent  , canActivate: [authGuard] },
-{ path: 'tasks', component: TasksComponent , canActivate: [authGuard] },
-{ path: 'team', component: TeamComponent , canActivate: [authGuard] },
-{ path: 'team/:id', component: EmployeeProfileComponent, canActivate: [authGuard]  },
-{path: 'customers/:id' , component:CustomerProfileComponent, canActivate: [authGuard] },
-{ path: 'orders', component: OrdersComponent, canActivate: [authGuard]  },
-{ path: 'invoices', component: InvoicesComponent , canActivate: [authGuard] },
-{ path: 'register', component: RegisterComponent },
-{ path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
-{ path: 'subscription', component: SubscriptionComponent, canActivate: [authGuard] },
-{ path: 'products', component: ProductsComponent, canActivate: [authGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
+  { path: 'orders', component: OrdersComponent, canActivate: [authGuard] },
+
+  { path: 'customers', component: CustomersComponent, canActivate: [authGuard, managerGuard] },
+  { path: 'customers/:id', component: CustomerProfileComponent, canActivate: [authGuard, managerGuard] },
+  { path: 'team', component: TeamComponent, canActivate: [authGuard, managerGuard] },
+  { path: 'team/:id', component: EmployeeProfileComponent, canActivate: [authGuard, managerGuard] },
+  { path: 'invoices', component: InvoicesComponent, canActivate: [authGuard, managerGuard] },
+  { path: 'products', component: ProductsComponent, canActivate: [authGuard, managerGuard] },
+
+  { path: 'subscription', component: SubscriptionComponent, canActivate: [authGuard, ownerGuard] },
 
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];

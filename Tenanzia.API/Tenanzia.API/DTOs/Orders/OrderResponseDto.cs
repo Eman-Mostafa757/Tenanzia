@@ -10,5 +10,6 @@
         public string? Notes { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<OrderItemResponseDto> Items { get; set; } = new();
+        public OrderInvoicesResponseDto? Invoices { get; set; } = new();
     }
 }

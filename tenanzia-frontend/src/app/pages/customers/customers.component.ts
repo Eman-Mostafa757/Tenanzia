@@ -11,7 +11,7 @@ import { SubscriptionService } from '../../services/subscription.service';
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, FormsModule,NotificationBellComponent],
+  imports: [CommonModule, FormsModule, NotificationBellComponent],
   templateUrl: './customers.component.html',
 })
 export class CustomersComponent implements OnInit {
@@ -22,8 +22,8 @@ export class CustomersComponent implements OnInit {
   showModal = false;
   editingCustomer: any = null;
   limitError = '';
-limits: any = null;
-curuntPlan : any =null;
+  limits: any = null;
+  curuntPlan: any = null;
 
 
   form = {
@@ -34,30 +34,39 @@ curuntPlan : any =null;
     notes: '',
     status: 'Active'
   };
-username = '';
+  username = '';
+
+  isOwner = false;
+  isManager = false;
+  isEmployee = false;
+  isManagerOrOwner = false;
   constructor(
     private customersService: CustomersService,
     private authService: AuthService,
     private router: Router,
-      public themeService: ThemeService,
-      private subscriptionService:SubscriptionService,
+    public themeService: ThemeService,
+    private subscriptionService: SubscriptionService,
 
-  ) {}
+  ) { }
 
   ngOnInit() {
-     this.username = this.authService.getUsername();
+    this.isOwner = this.authService.isOwner();
+    this.isManager = this.authService.isManager();
+    this.isEmployee = this.authService.isEmployee();
+    this.isManagerOrOwner = this.authService.isManagerOrOwner();
 
+    this.username = this.authService.getUsername();
     this.loadCustomers();
-      this.loadLimits();
-      this.getCurrentPlan();
+    this.loadLimits();
+    this.getCurrentPlan();
 
   }
-  
+
   loadLimits() {
- this.customersService.GetLimits().subscribe({
-    next: (res) => this.limits = res
-  });
-}
+    this.customersService.GetLimits().subscribe({
+      next: (res) => this.limits = res
+    });
+  }
 
   loadCustomers() {
     this.loading = true;
@@ -83,21 +92,21 @@ username = '';
   }
 
   saveCustomer() {
-      this.limitError = '';
+    this.limitError = '';
 
     if (this.editingCustomer) {
       this.customersService.update(this.editingCustomer.id, this.form).subscribe({
-        next: () => { this.showModal = false; this.loadCustomers(); this.loadLimits();}
+        next: () => { this.showModal = false; this.loadCustomers(); this.loadLimits(); }
       });
     } else {
       this.customersService.create(this.form).subscribe({
-        next: () => { this.showModal = false; this.loadCustomers();this.loadLimits(); },
-         error: (err) => {
-        if (err.error?.upgradeRequired) {
-          this.limitError = err.error.error;
-          this.showModal = false;
+        next: () => { this.showModal = false; this.loadCustomers(); this.loadLimits(); },
+        error: (err) => {
+          if (err.error?.upgradeRequired) {
+            this.limitError = err.error.error;
+            this.showModal = false;
+          }
         }
-      }
       });
     }
   }
@@ -105,7 +114,7 @@ username = '';
   deleteCustomer(id: number) {
     if (confirm('Are you sure?')) {
       this.customersService.delete(id).subscribe({
-        next: () => {this.loadCustomers();this.loadLimits();}
+        next: () => { this.loadCustomers(); this.loadLimits(); }
       });
     }
   }
@@ -117,14 +126,14 @@ username = '';
   goTo(page: string) {
     this.router.navigate([`/${page}`]);
   }
-  getCurrentPlan()
-  {
+  getCurrentPlan() {
     this.subscriptionService.getCurrent().subscribe({
-      next :(res)=> { this.curuntPlan=res;
+      next: (res) => {
+        this.curuntPlan = res;
 
       }
     })
 
   }
-  
+
 }

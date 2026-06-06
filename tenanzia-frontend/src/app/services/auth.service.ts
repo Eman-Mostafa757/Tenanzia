@@ -45,16 +45,13 @@ getRole(): string {
   const token = this.getToken();
   if (!token) return '';
   const payload = JSON.parse(atob(token.split('.')[1]));
-  return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || 'Employee';
+  return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
 }
 
-isManager(): boolean {
-  const token = this.getToken();
-  if (!token) return false;
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
-  return role === 'Owner' || role === 'Manager';
-}
+isOwner(): boolean { return this.getRole() === 'Owner'; }
+isManager(): boolean { return this.getRole() === 'Manager'; }
+isEmployee(): boolean { return this.getRole() === 'Employee'; }
+isManagerOrOwner(): boolean { return this.isOwner() || this.isManager(); }
 
 register(data: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/Auth/Register`, data, {

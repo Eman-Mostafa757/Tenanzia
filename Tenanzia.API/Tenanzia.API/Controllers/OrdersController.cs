@@ -57,9 +57,19 @@ namespace Tenanzia.API.Controllers
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     TotalPrice = i.Quantity * i.UnitPrice
-                }).ToList()
-            }).ToList();
+                }).ToList(),
+                Invoices = _context.Invoices.Where(inv => inv.OrderId == o.Id)
+                    .Select(inv => new OrderInvoicesResponseDto
+                    {
+                        Id = inv.Id,
+                        Status = inv.Status,
+                        Amount = inv.Amount,
+                        IssuedAt = inv.IssuedAt,
+                        PaidAt = inv.PaidAt
 
+
+                    }).FirstOrDefault()
+            }).ToList();
             return Ok(result);
         }
 

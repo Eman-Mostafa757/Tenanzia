@@ -30,6 +30,13 @@ export class DashboardComponent implements OnInit , AfterViewInit {
 username = '';
 curuntPlan :any=null;
 
+isOwner = false;
+isManager = false;
+isEmployee = false;
+isManagerOrOwner = false;
+
+
+
   constructor(
     private dashboardService: DashboardService,
     private authService: AuthService,
@@ -41,6 +48,10 @@ curuntPlan :any=null;
 
 
   ngOnInit() {
+    this.isOwner = this.authService.isOwner();
+  this.isManager = this.authService.isManager();
+  this.isEmployee = this.authService.isEmployee();
+  this.isManagerOrOwner = this.authService.isManagerOrOwner();
     this.getCurrentPlan();
   this.username = this.authService.getUsername();
 

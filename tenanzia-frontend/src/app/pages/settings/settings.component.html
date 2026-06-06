@@ -9,31 +9,38 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-                  <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Settings</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button *ngIf="isOwner" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Settings</button>
     </div>
     <div class="flex items-center gap-3">
-                  <app-notification-bell></app-notification-bell>
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
+      <app-notification-bell></app-notification-bell>
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+        (click)="goTo('subscription')">{{curuntPlan.planName}} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
       <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
         {{ me?.username[0]?.toUpperCase() }}
       </div>
-          <!-- Theme Toggle -->
-<button (click)="themeService.toggle()"
-  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
-  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-</button>
+      <!-- Theme Toggle -->
+      <button (click)="themeService.toggle()"
+        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+      </button>
     </div>
   </nav>
 
@@ -51,7 +58,8 @@
     <div *ngIf="!loading">
 
       <!-- Success / Error -->
-      <div *ngIf="success" class="mb-4 bg-[#12251E] border border-[#5DCAA5] text-[#5DCAA5] text-sm px-4 py-3 rounded-xl">
+      <div *ngIf="success"
+        class="mb-4 bg-[#12251E] border border-[#5DCAA5] text-[#5DCAA5] text-sm px-4 py-3 rounded-xl">
         ✅ {{ success }}
       </div>
       <div *ngIf="error" class="mb-4 bg-[#3C1528] border border-[#D4537E] text-[#ED93B1] text-sm px-4 py-3 rounded-xl">
@@ -60,24 +68,18 @@
 
       <!-- Tabs -->
       <div class="flex gap-1 mb-6">
-        <button (click)="activeTab = 'profile'"
-          class="px-4 py-2 text-xs rounded-lg transition-colors"
-          [class.bg-[#1A1A20]]="activeTab === 'profile'"
-          [class.text-[#F0F0F2]]="activeTab === 'profile'"
+        <button (click)="activeTab = 'profile'" class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'profile'" [class.text-[#F0F0F2]]="activeTab === 'profile'"
           [class.text-[#666]]="activeTab !== 'profile'">
           👤 Profile
         </button>
-        <button (click)="activeTab = 'password'"
-          class="px-4 py-2 text-xs rounded-lg transition-colors"
-          [class.bg-[#1A1A20]]="activeTab === 'password'"
-          [class.text-[#F0F0F2]]="activeTab === 'password'"
+        <button (click)="activeTab = 'password'" class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'password'" [class.text-[#F0F0F2]]="activeTab === 'password'"
           [class.text-[#666]]="activeTab !== 'password'">
           🔒 Password
         </button>
-        <button *ngIf="isOwner" (click)="activeTab = 'company'"
-          class="px-4 py-2 text-xs rounded-lg transition-colors"
-          [class.bg-[#1A1A20]]="activeTab === 'company'"
-          [class.text-[#F0F0F2]]="activeTab === 'company'"
+        <button *ngIf="isOwner" (click)="activeTab = 'company'" class="px-4 py-2 text-xs rounded-lg transition-colors"
+          [class.bg-[#1A1A20]]="activeTab === 'company'" [class.text-[#F0F0F2]]="activeTab === 'company'"
           [class.text-[#666]]="activeTab !== 'company'">
           🏢 Company
         </button>
@@ -88,19 +90,17 @@
 
         <!-- Avatar -->
         <div class="flex items-center gap-4 mb-6 pb-6 border-b border-[#1E1E24]">
-          <div class="w-16 h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-2xl text-white font-medium">
+          <div
+            class="w-16 h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-2xl text-white font-medium">
             {{ me?.username[0]?.toUpperCase() }}
           </div>
           <div>
             <div class="text-sm font-medium text-[#F0F0F2]">{{ me?.username }}</div>
             <div class="text-xs text-[#666] mt-1">{{ me?.email }}</div>
             <div class="text-xs mt-1">
-              <span class="px-2 py-0.5 rounded-full text-xs"
-                [class.bg-[#3C1528]]="me?.role === 'Owner'"
-                [class.text-[#ED93B1]]="me?.role === 'Owner'"
-                [class.bg-[#1A1829]]="me?.role === 'Manager'"
-                [class.text-[#7F77DD]]="me?.role === 'Manager'"
-                [class.bg-[#12251E]]="me?.role === 'Employee'"
+              <span class="px-2 py-0.5 rounded-full text-xs" [class.bg-[#3C1528]]="me?.role === 'Owner'"
+                [class.text-[#ED93B1]]="me?.role === 'Owner'" [class.bg-[#1A1829]]="me?.role === 'Manager'"
+                [class.text-[#7F77DD]]="me?.role === 'Manager'" [class.bg-[#12251E]]="me?.role === 'Employee'"
                 [class.text-[#5DCAA5]]="me?.role === 'Employee'">
                 {{ me?.role }}
               </span>
@@ -113,12 +113,12 @@
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Username</label>
             <input [(ngModel)]="profileForm.username"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Email</label>
             <input [(ngModel)]="profileForm.email" type="email"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
         </div>
 
@@ -135,12 +135,12 @@
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">New Password</label>
             <input [(ngModel)]="profileForm.newPassword" type="password" placeholder="••••••••"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Confirm New Password</label>
             <input [(ngModel)]="profileForm.confirmPassword" type="password" placeholder="••••••••"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
         </div>
         <button (click)="saveProfile()"
@@ -172,7 +172,7 @@
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Company Name</label>
             <input [(ngModel)]="companyForm.name"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
         </div>
 
