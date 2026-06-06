@@ -15,13 +15,17 @@ namespace Tenanzia.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+
 
 
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
-                    policy.WithOrigins("http://localhost:44302", "http://localhost:4200")
+                    policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
@@ -99,6 +103,7 @@ namespace Tenanzia.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("AllowFrontend");
 
             //app.UseHttpsRedirection();
             app.UseCors("AllowAngular");
