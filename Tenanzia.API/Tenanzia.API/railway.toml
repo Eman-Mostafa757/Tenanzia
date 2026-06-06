@@ -1,5 +1,6 @@
 ﻿[build]
 builder = "nixpacks"
+buildCommand = "dotnet publish -c Release -o out --runtime linux-x64 --self-contained true"
 
 [deploy]
 startCommand = "./out/Tenanzia.API"
