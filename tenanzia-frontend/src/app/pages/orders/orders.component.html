@@ -9,21 +9,40 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
       <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Orders</button>
-                  <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button (click)="goTo('products')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
     <div class="flex items-center gap-3">
       <app-notification-bell></app-notification-bell>
-      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')"> {{ curuntPlan?.planName || 'Free' }} plan</button>
+      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')"> {{
+        curuntPlan?.planName || 'Free' }} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">{{ username[0]?.toUpperCase() }}</div>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">{{
+        username[0]?.toUpperCase() }}</div>
+         <!-- Theme Toggle -->
+<button (click)="themeService.toggle()"
+  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
+  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+</button>
     </div>
+   
   </nav>
 
   <div class="p-6">
@@ -75,10 +94,23 @@
 
     <!-- Search -->
     <div class="mb-4">
-      <input [(ngModel)]="searchText" (ngModelChange)="applySearch()"
-        placeholder="Search by customer name..."
-        class="w-full max-w-sm bg-[#111114] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+      <input [(ngModel)]="searchText" (ngModelChange)="applySearch()" placeholder="Search by customer name..."
+        class="w-full max-w-sm bg-[#111114] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm placeholder-[#444] focus:outline-none focus:border-[#D4537E] transition-colors" />
     </div>
+
+
+  <!-- Low Stock Banner
+  <div *ngIf="showStockIsNotHaveQuantaty" class="mb-4 bg-[#2A1F0A] border border-[#EF9F27] rounded-xl px-5 py-3">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-sm text-[#EF9F27] font-medium">⚠️ Low Stock Alert</span>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <div *ngFor="let p of lowStock" class="text-xs bg-[#1E1E24] text-[#EF9F27] px-3 py-1 rounded-full">
+        {{ p.name }} Not Have This Quantity In Stock =>{{ p.stockQuantity }} left
+      </div>
+    </div>
+  </div> -->
+
 
     <!-- Loading -->
     <div *ngIf="loading" class="text-center py-20 text-[#666] text-sm">Loading...</div>
@@ -120,14 +152,11 @@
             <td class="px-5 py-4 text-xs text-[#666]">{{ order.createdAt | date:'MMM d, y' }}</td>
             <td class="px-5 py-4">
               <div class="flex items-center gap-2">
-                <button *ngIf="order.status === 'Pending'"
-                  (click)="updateStatus(order.id, 'Processing')"
+                <button *ngIf="order.status === 'Pending'" (click)="updateStatus(order.id, 'Processing')"
                   class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">→ Process</button>
-                <button *ngIf="order.status === 'Processing'"
-                  (click)="updateStatus(order.id, 'Completed')"
+                <button *ngIf="order.status === 'Processing'" (click)="updateStatus(order.id, 'Completed')"
                   class="text-xs text-[#5DCAA5] hover:text-[#7DDAB5] transition-colors">→ Complete</button>
-                <button *ngIf="order.status === 'Pending'"
-                  (click)="updateStatus(order.id, 'Cancelled')"
+                <button *ngIf="order.status === 'Pending'" (click)="updateStatus(order.id, 'Cancelled')"
                   class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">Cancel</button>
               </div>
             </td>
@@ -179,18 +208,15 @@
           <span class="text-xs px-2 py-1 rounded-full" [class]="getStatusClass(selectedOrder.status)">
             {{ selectedOrder.status }}
           </span>
-          <button *ngIf="selectedOrder.status === 'Pending'"
-            (click)="updateStatus(selectedOrder.id, 'Processing')"
+          <button *ngIf="selectedOrder.status === 'Pending'" (click)="updateStatus(selectedOrder.id, 'Processing')"
             class="text-xs bg-[#1A1829] text-[#7F77DD] px-3 py-1 rounded-lg hover:bg-[#252438] transition-colors">
             → Mark as Processing
           </button>
-          <button *ngIf="selectedOrder.status === 'Processing'"
-            (click)="updateStatus(selectedOrder.id, 'Completed')"
+          <button *ngIf="selectedOrder.status === 'Processing'" (click)="updateStatus(selectedOrder.id, 'Completed')"
             class="text-xs bg-[#12251E] text-[#5DCAA5] px-3 py-1 rounded-lg hover:bg-[#1A3028] transition-colors">
             → Mark as Completed
           </button>
-          <button *ngIf="selectedOrder.status === 'Pending'"
-            (click)="updateStatus(selectedOrder.id, 'Cancelled')"
+          <button *ngIf="selectedOrder.status === 'Pending'" (click)="updateStatus(selectedOrder.id, 'Cancelled')"
             class="text-xs bg-[#3C1528] text-[#ED93B1] px-3 py-1 rounded-lg hover:bg-[#4C2038] transition-colors">
             Cancel Order
           </button>
@@ -216,8 +242,7 @@
   </div>
 
   <!-- Create Order Modal -->
-  <div *ngIf="showCreateModal"
-    class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+  <div *ngIf="showCreateModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
     <div class="bg-[#111114] border border-[#1E1E24] rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between p-6 border-b border-[#1E1E24]">
         <h2 class="text-[#F0F0F2] font-medium">New Order</h2>
@@ -246,21 +271,17 @@
 
             <!-- Product Name + Suggestions -->
             <div class="relative flex-1">
-             <input
-  [(ngModel)]="item.productName"
-  (focus)="showAllProducts(item)"
-  (ngModelChange)="onProductInputChange(item)"
-  (blur)="clearSuggestionsDelayed(item)"
-  placeholder="Select product"
-  class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
-<!-- <div class="text-white">
+              <input [(ngModel)]="item.productName" (focus)="showAllProducts(item)"
+                (ngModelChange)="onProductInputChange(item)" (blur)="clearSuggestionsDelayed(item)"
+                placeholder="Select product"
+                class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
+              <!-- <div class="text-white">
   Suggestions Count: {{ item.suggestions?.length }}
 </div> -->
-<!-- Suggestions Dropdown -->
+              <!-- Suggestions Dropdown -->
               <div *ngIf="(item.suggestions?.length ?? 0) > 0"
                 class="absolute top-full left-0 right-0 bg-[#111114] border border-[#1E1E24] rounded-xl mt-1 z-10 overflow-hidden shadow-lg">
-                <div *ngFor="let product of item.suggestions"
-                  (click)="selectProduct(item, product)"
+                <div *ngFor="let product of item.suggestions" (click)="selectProduct(item, product)"
                   class="flex items-center justify-between px-3 py-2 hover:bg-[#1A1A20] cursor-pointer transition-colors">
                   <span class="text-xs text-[#F0F0F2]">{{ product.name }}</span>
                   <span class="text-xs text-[#D4537E]">${{ product.price }}</span>
@@ -270,11 +291,11 @@
 
             <!-- Quantity -->
             <input [(ngModel)]="item.quantity" type="number" min="1" placeholder="Qty"
-              class="w-16 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-16 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
 
             <!-- Unit Price -->
             <input [(ngModel)]="item.unitPrice" type="number" min="0" placeholder="Price"
-              class="w-24 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-24 bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-3 py-2 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
 
             <!-- Remove -->
             <button *ngIf="form.items.length > 1" (click)="removeItem(i)"
@@ -317,3 +338,5 @@
   </div>
 
 </div>
+
+

@@ -129,8 +129,17 @@ namespace Tenanzia.API.Controllers
                     UnitPrice = i.UnitPrice,
                 }).ToList()
             };
+            foreach (var item in dto.Items)
+            {
+                var product = _context.Products.FirstOrDefault(p => p.Name == item.ProductName && p.TenantId == tenantId && p.TrackStock);
+                if (product != null && product.StockQuantity < item.Quantity)
+                {
+                    return BadRequest($"Not enough stock for product '{item.ProductName}'. Available: {product.StockQuantity}");
+                }
+            }
 
-            _context.Orders.Add(order);
+
+                _context.Orders.Add(order);
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, new OrderResponseDto
@@ -165,13 +174,22 @@ namespace Tenanzia.API.Controllers
         OrderStatus.Processing,
         OrderStatus.Completed,
         OrderStatus.Cancelled
-    };
+            };
 
             if (!validStatuses.Contains(newStatus))
                 return BadRequest("Invalid status value");
 
-            var order = _context.Orders
+            var order = _context.Orders.Include(o=> o.OrderItems)
                 .FirstOrDefault(o => o.TenantId == tenantId && o.Id == id);
+
+
+            var owners = _context.UserRoles
+                            .Include(ur => ur.Role)
+                            .Where(ur => ur.Role.Name == "Owner" || ur.Role.Name == "Manager")
+                            .Join(_context.UserTenants.Where(ut => ut.TenantId == tenantId),
+                                  ur => ur.UserId, ut => ut.UserId, (ur, ut) => (int)ur.UserId) // ← cast لـ int
+                            .ToList();
+
 
             if (order == null)
                 return NotFound("Order not found");
@@ -180,8 +198,27 @@ namespace Tenanzia.API.Controllers
             order.Status = newStatus;
 
             // لما يوصل Processing → اعمل Invoice تلقائياً
-            if (newStatus == OrderStatus.Processing && oldStatus != OrderStatus.Processing)
+            // لما يوصل Processing → اعمل Invoice وخصم الـ Stock
+            if (newStatus == "Processing" && oldStatus != "Processing")
             {
+                // ✅ Check Stock Availability الأول
+                foreach (var item in order.OrderItems)
+                {
+                    var product = _context.Products
+                        .FirstOrDefault(p => p.Name == item.ProductName &&
+                                             p.TenantId == tenantId &&
+                                             p.TrackStock);
+
+                    if (product != null && product.StockQuantity < item.Quantity)
+                    {
+                        return BadRequest(new
+                        {
+                            error = $"Not enough stock for '{product.Name}'. Available: {product.StockQuantity}, Required: {item.Quantity}"
+                        });
+                    }
+                }
+
+                // Invoice
                 var exists = _context.Invoices.Any(i => i.OrderId == id);
                 if (!exists)
                 {
@@ -194,8 +231,37 @@ namespace Tenanzia.API.Controllers
                         IssuedAt = DateTime.UtcNow
                     });
                 }
-            }
 
+                // خصم الـ Stock بعد التأكد
+                foreach (var item in order.OrderItems)
+                {
+                    var product = _context.Products
+                        .FirstOrDefault(p => p.Name == item.ProductName &&
+                                             p.TenantId == tenantId &&
+                                             p.TrackStock);
+
+                    if (product != null)
+                    {
+                        product.StockQuantity -= item.Quantity;
+
+                        // Low Stock Notification
+                        if (product.StockQuantity <= product.LowStockThreshold)
+                        {
+
+                            foreach (var ownerId in owners)
+                            {
+                                _notificationService.Create(
+                                    tenantId,
+                                    ownerId,
+                                    "⚠️ Low Stock Alert",
+                                    $"{product.Name} is running low — only {product.StockQuantity} left",
+                                    "stock"
+                                );
+                            }
+                        }
+                    }
+                }
+            }
             // لما Invoice تتدفع → Order يبقى Completed تلقائياً
             if (newStatus == OrderStatus.Completed)
             {
@@ -206,18 +272,9 @@ namespace Tenanzia.API.Controllers
                     invoice.PaidAt = DateTime.UtcNow;
                 }
             }
-
-
             _context.SaveChanges();
 
             // في UpdateStatus — notify الـ Owner
-            var owners = _context.UserRoles
-    .Include(ur => ur.Role)
-    .Where(ur => ur.Role.Name == "Owner")
-    .Join(_context.UserTenants.Where(ut => ut.TenantId == tenantId),
-          ur => ur.UserId, ut => ut.UserId, (ur, ut) => (int)ur.UserId) // ← cast لـ int
-    .ToList();
-
             foreach (var ownerId in owners)
             {
                 _notificationService.Create(
@@ -228,7 +285,27 @@ namespace Tenanzia.API.Controllers
                     "order"
                 );
             }
-            return Ok("Status updated successfully");
+
+
+            if (newStatus == "Cancelled" && oldStatus == "Processing")
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    var product = _context.Products
+                        .FirstOrDefault(p => p.Name == item.ProductName &&
+                                             p.TenantId == tenantId &&
+                                             p.TrackStock);
+
+                    if (product != null)
+                        product.StockQuantity += item.Quantity;
+                }
+            }
+            return Ok(new
+            {
+                message = "Status updated successfully"
+            });
+
+
         }
 
         // DELETE: api/orders/5

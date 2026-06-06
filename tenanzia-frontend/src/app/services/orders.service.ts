@@ -47,7 +47,7 @@ export class OrdersService {
           'Authorization': `Bearer ${this.authService.getToken()}`,
           'Content-Type': 'application/json'
         }),
-        responseType: 'text'
+        
       }
     );
   }
@@ -58,6 +58,16 @@ export class OrdersService {
       {
         headers: this.getHeaders(),
         responseType: 'text'
+      }
+    );
+  }
+  getById(id:number)
+  {
+    return this.http.get(
+      `${this.apiUrl}/Orders/${id}`,
+      {
+        headers: this.getHeaders(),
+        
       }
     );
   }

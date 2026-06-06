@@ -5,11 +5,13 @@ import { Router } from '@angular/router';
 import { SettingsService } from '../../services/settings.service';
 import { AuthService } from '../../services/auth.service';
 import { SubscriptionService } from '../../services/subscription.service';
+import { ThemeService } from '../../services/theme.service';
+import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,NotificationBellComponent],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
@@ -38,6 +40,8 @@ curuntPlan:any=null;
     private authService: AuthService,
     private router: Router,
     private subscriptionService:SubscriptionService,
+        public themeService:ThemeService
+    
   ) {}
 
   ngOnInit() {

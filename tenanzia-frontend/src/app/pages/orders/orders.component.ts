@@ -18,8 +18,9 @@ import { ProductsService } from '../../services/products.service';
 })
 export class OrdersComponent implements OnInit {
 allProducts: any[] = [];
-
+lowStock:any[]=[];
   orders: any[] = [];
+      order:any=null;
   filteredOrders: any[] = [];
   stats: any = null;
   customers: any[] = [];
@@ -30,6 +31,7 @@ allProducts: any[] = [];
   showDetailsModal = false;
   selectedOrder: any = null;
 username = '';
+showStockIsNotHaveQuantaty=false;
   currentUserId: number | undefined;
 curuntPlan:any=null;
 
@@ -63,6 +65,7 @@ form: {
       public themeService: ThemeService,
       private subscriptionService : SubscriptionService,
       private productsService:ProductsService,
+
 
   ) {}
 
@@ -121,16 +124,42 @@ form: {
   }
 
   updateStatus(id: number, status: string) {
-    this.ordersService.updateStatus(id, status).subscribe({
-      next: () => {
-        this.loadOrders();
-        this.loadStats();
-        if (this.selectedOrder?.id === id) {
-          this.selectedOrder.status = status;
-        }
+  this.ordersService.updateStatus(id, status).subscribe({
+    next: () => {
+      this.loadOrders();
+      this.loadStats();
+      if (this.selectedOrder?.id === id) {
+        this.selectedOrder.status = status;
       }
-    });
-  }
+    },
+    error: (err) => {
+      // Stock error
+      const errorMsg = err.error?.error || err.error || 'Something went wrong';
+      console.log(errorMsg);
+      alert(errorMsg);
+    }
+  });
+}
+// SyntaxError: Unexpected token 'S', "Status upd"... is not valid JSON
+
+
+
+// for (const item of this.form.items) {
+
+//   const product = this.allProducts.find(
+//     p => p.id === item.productId
+//   );
+
+//   if (product && item.quantity > product.stockQuantity) {
+
+//     alert(
+//       `${product.name} has only ${product.stockQuantity} in stock`
+//     );
+
+//     return;
+//   }
+// }
+
 
 addItem() {
   this.form.items.push({
@@ -161,7 +190,7 @@ onProductInputChange(item: any) {
     return this.form.items.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
   }
 
-  createOrder() {
+createOrder() {
 if (!this.form.customerId) {
   alert('Please select customer');
   return;
@@ -181,6 +210,21 @@ if (this.form.items.some(i => !i.productId)) {
       unitPrice: i.unitPrice
     }))
   };
+  for (const item of this.form.items) {
+
+  const product = this.allProducts.find(
+    p => p.id === item.productId
+  );
+
+  if (product && item.quantity > product.stockQuantity) {
+
+    alert(
+      `${product.name} has only ${product.stockQuantity} in stock`
+    );
+
+    return;
+  }
+}
 
   this.ordersService.create(orderData).subscribe({
     next: () => {
@@ -256,5 +300,17 @@ clearSuggestionsDelayed(item: any) {
     item.suggestions = [];
   }, 200);
 }
+
+getLowStock(){
+  this.productsService.getLowStock().subscribe(
+    {
+      next :(res)=> {this.lowStock=res;}
+    }
+  )
+
+}
+
+
+
 
 }

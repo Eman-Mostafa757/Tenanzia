@@ -88,7 +88,25 @@
       </button>
 
     </div>
-
+<!-- Low Stock Alert في الـ Dashboard -->
+<div *ngIf="data.lowStockProducts?.length > 0"
+  class="bg-[#2A1F0A] border border-[#EF9F27] rounded-xl p-4 mb-4">
+  <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">
+    ⚠️ Low Stock — {{ data.lowStockProducts.length }} products need attention
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <div *ngFor="let p of data.lowStockProducts"
+      class="flex items-center gap-2 bg-[#1E1E24] px-3 py-1.5 rounded-lg cursor-pointer hover:border-[#EF9F27] border border-transparent transition-colors"
+      (click)="goTo('products')">
+      <span class="text-xs text-[#F0F0F2]">{{ p.name }}</span>
+      <span class="text-xs font-medium"
+        [class.text-[#D4537E]]="p.stockQuantity === 0"
+        [class.text-[#EF9F27]]="p.stockQuantity > 0">
+        {{ p.stockQuantity === 0 ? 'Out of stock' : p.stockQuantity + ' left' }}
+      </span>
+    </div>
+  </div>
+</div>
 
 <!-- Revenue + Orders Charts -->
 <div *ngIf="chartData.length > 0" class="grid grid-cols-2 gap-3 mb-6">

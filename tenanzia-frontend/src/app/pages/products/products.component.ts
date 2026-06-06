@@ -4,34 +4,50 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
+import { SubscriptionService } from '../../services/subscription.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,NotificationBellComponent],
   templateUrl: './products.component.html',
 })
 export class ProductsComponent implements OnInit {
 
   products: any[] = [];
+  lowStockProducts: any[] = [];
+curuntPlan:any=null;
   loading = true;
   showModal = false;
   editingProduct: any = null;
+username = '';
 
   form = {
     name: '',
     description: '',
     price: 0,
-    unit: 'piece'
+    unit: 'piece',
+     stockQuantity: 0,
+  lowStockThreshold: 5,
+  trackStock: true
   };
+Math = Math;
 
   constructor(
     private productsService: ProductsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private subscriptionService:SubscriptionService,
+    public themeService:ThemeService
   ) {}
 
-  ngOnInit() { this.loadProducts(); }
+  ngOnInit() { 
+      this.username = this.authService.getUsername();
+    this.loadProducts();
+    this.loadLowStock();
+ }
 
   loadProducts() {
     this.loading = true;
@@ -42,7 +58,9 @@ export class ProductsComponent implements OnInit {
 
   openAddModal() {
     this.editingProduct = null;
-    this.form = { name: '', description: '', price: 0, unit: 'piece' };
+    this.form = { name: '', description: '', price: 0, unit: 'piece',  stockQuantity: 0,
+  lowStockThreshold: 5,
+  trackStock: true };
     this.showModal = true;
   }
 
@@ -72,6 +90,44 @@ export class ProductsComponent implements OnInit {
         next: () => this.loadProducts()
       });
     }
+  }
+
+  loadLowStock() {
+  this.productsService.getLowStock().subscribe({
+    next: (res) => this.lowStockProducts = res
+  });
+}
+
+updateStock(product: any, newQuantity: number) {
+  this.productsService.updateStock(product.id, newQuantity).subscribe({
+    next: () => {
+      this.loadProducts();
+      this.loadLowStock();
+    }
+  });
+}
+
+getStockClass(product: any) {
+  if (!product.trackStock) return 'text-[#666]';
+  if (product.stockQuantity === 0) return 'text-[#D4537E]';
+  if (product.isLowStock) return 'text-[#EF9F27]';
+  return 'text-[#5DCAA5]';
+}
+
+getStockLabel(product: any) {
+  if (!product.trackStock) return 'Not tracked';
+  if (product.stockQuantity === 0) return 'Out of stock';
+  if (product.isLowStock) return 'Low stock';
+  return 'In stock';
+}
+ getCurrentPlan()
+  {
+    this.subscriptionService.getCurrent().subscribe({
+      next :(res)=> { this.curuntPlan=res;
+
+      }
+    })
+
   }
 
   logout() { this.authService.logout(); }

@@ -1,4 +1,5 @@
 ﻿using Tenanzia.API.DTOs.Customers;
+using Tenanzia.API.DTOs.Products;
 
 namespace Tenanzia.API.DTOs.Dashboard
 {
@@ -26,6 +27,8 @@ namespace Tenanzia.API.DTOs.Dashboard
         public List<RecentOrderDto> RecentOrders { get; set; } = new();
         public List<RecentCustomerDto> RecentCustomers { get; set; } = new();
         public List<TopCustomerDto> TopCustomers { get; set; } = new();
+        public List<LowStockProductDto> LowStockProducts { get; set; } = new();
+
 
     }
 }

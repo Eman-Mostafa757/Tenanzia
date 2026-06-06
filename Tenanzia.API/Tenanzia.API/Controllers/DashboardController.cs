@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tenanzia.API.DTOs.Customers;
 using Tenanzia.API.DTOs.Dashboard;
+using Tenanzia.API.DTOs.Products;
 using Tenanzia.API.Enums;
 using Tenanzia.API.Interfaces;
 using Tenanzia.API.Models;
@@ -63,6 +64,16 @@ namespace Tenanzia.API.Controllers
     .Take(5)
     .ToList();
 
+
+            // Low Stock Products
+            var lowStockProducts = _context.Products
+                .Where(p => p.TenantId == tenantId &&
+                            p.IsActive &&
+                            p.TrackStock &&
+                            p.StockQuantity <= p.LowStockThreshold)
+                .Select(p => new { p.Id, p.Name, p.StockQuantity, p.LowStockThreshold })
+                .ToList();
+
             var dashboard = new DashboardResponseDto
             {
                 CompanyName = tenant?.Name ?? "", // ← جديد
@@ -115,6 +126,13 @@ namespace Tenanzia.API.Controllers
                     CustomerName = c.CustomerName,
                     TotalSpent = c.TotalSpent,
                     TotalOrders = c.TotalOrders
+                }).ToList(),
+                LowStockProducts = lowStockProducts.Select(p => new LowStockProductDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    StockQuantity = p.StockQuantity,
+                    LowStockThreshold = p.LowStockThreshold
                 }).ToList()
             };
 

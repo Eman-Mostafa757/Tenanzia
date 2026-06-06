@@ -40,4 +40,34 @@ export class ProductsService {
       responseType: 'text'
     });
   }
+
+  updateStock(id: number, quantity: number) {
+  return this.http.patch(
+    `${this.apiUrl}/Products/${id}/stock`,
+    quantity,
+    {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${this.authService.getToken()}`,
+        'Content-Type': 'application/json'
+      }),
+      responseType: 'text'
+    }
+  );
+}
+
+getLowStock() {
+  return this.http.get<any[]>(
+    `${this.apiUrl}/Products/low-stock`,
+    { headers: this.getHeaders() }
+  );
+}
+getById(id:Number){
+  return this.http.get(
+    `${this.apiUrl}/Products/${id}`,
+    {
+      headers: this.getHeaders(),
+      responseType: 'text'
+    }
+  )
+}
 }

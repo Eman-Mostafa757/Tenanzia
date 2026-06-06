@@ -9,19 +9,40 @@
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
     <div class="flex items-center gap-1">
-     <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
-      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-      <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+      <button (click)="goTo('dashboard')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
+      <button (click)="goTo('customers')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button (click)="goTo('orders')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button 
+        class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Products</button>
+      <button (click)="goTo('invoices')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button (click)="goTo('team')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('settings')"
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
 
     </div>
     <div class="flex items-center gap-3">
-      <span class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full">Pro Plan</span>
+      <app-notification-bell></app-notification-bell>
+      <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')"> {{
+        curuntPlan?.planName || 'Free' }} plan</button>
       <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">{{
+        username[0]?.toUpperCase() }}</div>
+         <!-- Theme Toggle -->
+<button (click)="themeService.toggle()"
+  class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+  [class.bg-[#1E1E24]]="themeService.isDarkMode()"
+  [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
+  [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
+  <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
+  <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
+</button>
     </div>
   </nav>
 
@@ -44,7 +65,75 @@
 
     <!-- Grid -->
     <div *ngIf="!loading" class="grid grid-cols-3 gap-4">
+
       <div *ngFor="let product of products"
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 hover:border-[#2A2A30] transition-colors"
+        [class.border-[#D4537E]]="product.trackStock && product.stockQuantity === 0"
+        [class.border-[#EF9F27]]="product.isLowStock && product.stockQuantity > 0">
+
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-lg bg-[#1E1E24] flex items-center justify-center text-lg">
+            📦
+          </div>
+          <div class="flex gap-2">
+            <button (click)="openEditModal(product)"
+              class="text-xs text-[#7F77DD] hover:text-[#9F97ED] transition-colors">Edit</button>
+            <button (click)="deleteProduct(product.id)"
+              class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">Delete</button>
+          </div>
+        </div>
+
+        <div class="text-sm font-medium text-[#F0F0F2] mb-1">{{ product.name }}</div>
+        <div class="text-xs text-[#666] mb-3" *ngIf="product.description">{{ product.description }}</div>
+
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-lg font-medium text-[#D4537E]">${{ product.price | number }}</span>
+          <span class="text-xs text-[#444] bg-[#1E1E24] px-2 py-0.5 rounded-full">
+            per {{ product.unit || 'piece' }}
+          </span>
+        </div>
+
+
+
+        <!-- Stock Section -->
+        <div *ngIf="product.trackStock" class="border-t border-[#1E1E24] pt-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-[#666]">Stock</span>
+            <span class="text-xs font-medium" [class]="getStockClass(product)">
+              {{ product.stockQuantity }} units — {{ getStockLabel(product) }}
+            </span>
+          </div>
+
+          <!-- Stock Progress Bar -->
+          <div class="h-1.5 bg-[#1E1E24] rounded-full overflow-hidden mb-2">
+            <div class="h-full rounded-full transition-all"
+              [style.width.%]="Math.min((product.stockQuantity / (product.lowStockThreshold * 3)) * 100, 100)"
+              [class.bg-[#5DCAA5]]="!product.isLowStock && product.stockQuantity > 0"
+              [class.bg-[#EF9F27]]="product.isLowStock && product.stockQuantity > 0"
+              [class.bg-[#D4537E]]="product.stockQuantity === 0">
+            </div>
+          </div>
+
+          <!-- Quick Stock Update -->
+          <div class="flex items-center gap-2">
+            <button (click)="updateStock(product, product.stockQuantity - 1)" [disabled]="product.stockQuantity === 0"
+              class="w-6 h-6 rounded-lg bg-[#1E1E24] text-[#666] hover:text-[#F0F0F2] disabled:opacity-30 transition-colors text-xs">
+              −
+            </button>
+            <span class="text-xs text-[#F0F0F2] w-8 text-center">{{ product.stockQuantity }}</span>
+            <button (click)="updateStock(product, product.stockQuantity + 1)"
+              class="w-6 h-6 rounded-lg bg-[#1E1E24] text-[#666] hover:text-[#F0F0F2] transition-colors text-xs">
+              +
+            </button>
+            <span class="text-xs text-[#444] ml-1">Alert at {{ product.lowStockThreshold }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="!product.trackStock" class="border-t border-[#1E1E24] pt-3">
+          <span class="text-xs text-[#444]">Stock not tracked</span>
+        </div>
+      </div>
+      <!-- <div *ngFor="let product of products"
         class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 hover:border-[#2A2A30] transition-colors">
 
         <div class="flex items-start justify-between mb-3">
@@ -70,14 +159,30 @@
             per {{ product.unit || 'piece' }}
           </span>
         </div>
-      </div>
+      </div> -->
 
-      <div *ngIf="products.length === 0"
-        class="col-span-3 text-center py-20 text-[#333] text-sm">
+      <div *ngIf="products.length === 0" class="col-span-3 text-center py-20 text-[#333] text-sm">
         No products yet — add your first product!
       </div>
     </div>
   </div>
+
+
+
+
+
+  <!-- Low Stock Banner -->
+  <div *ngIf="lowStockProducts.length > 0" class="mb-4 bg-[#2A1F0A] border border-[#EF9F27] rounded-xl px-5 py-3">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-sm text-[#EF9F27] font-medium">⚠️ Low Stock Alert</span>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <div *ngFor="let p of lowStockProducts" class="text-xs bg-[#1E1E24] text-[#EF9F27] px-3 py-1 rounded-full">
+        {{ p.name }}: {{ p.stockQuantity }} left
+      </div>
+    </div>
+  </div>
+
 
   <!-- Modal -->
   <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
@@ -91,18 +196,18 @@
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Name *</label>
           <input [(ngModel)]="form.name"
-            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div>
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Description</label>
           <input [(ngModel)]="form.description"
-            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+            class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Price *</label>
             <input [(ngModel)]="form.price" type="number" min="0"
-              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors"/>
+              class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
           </div>
           <div>
             <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Unit</label>
@@ -115,6 +220,29 @@
               <option value="kg">KG</option>
               <option value="service">Service</option>
             </select>
+          </div>
+
+          <!-- في الـ Modal بعد الـ Unit -->
+          <div class="flex items-center gap-2 mt-2">
+            <input type="checkbox" [(ngModel)]="form.trackStock" id="trackStock" class="rounded" />
+            <label for="trackStock" class="text-xs text-[#666]">Track Stock</label>
+          </div>
+
+          <div *ngIf="form.trackStock" class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">
+                Initial Stock
+              </label>
+              <input [(ngModel)]="form.stockQuantity" type="number" min="0"
+                class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
+            </div>
+            <div>
+              <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">
+                Low Stock Alert
+              </label>
+              <input [(ngModel)]="form.lowStockThreshold" type="number" min="0"
+                class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
+            </div>
           </div>
         </div>
       </div>

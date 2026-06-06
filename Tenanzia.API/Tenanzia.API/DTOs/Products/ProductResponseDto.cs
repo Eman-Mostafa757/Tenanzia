@@ -7,6 +7,10 @@
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public string? Unit { get; set; }
+        public int StockQuantity { get; set; }
+        public int LowStockThreshold { get; set; }
+        public bool TrackStock { get; set; }
+        public bool IsLowStock { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
     }

@@ -11,5 +11,8 @@ namespace Tenanzia.API.DTOs.Products
         [Required]
         public decimal Price { get; set; }
         public string? Unit { get; set; }
+        public int StockQuantity { get; set; } = 0;
+        public int LowStockThreshold { get; set; } = 5;
+        public bool TrackStock { get; set; } = true;
     }
 }
