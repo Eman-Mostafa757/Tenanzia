@@ -2,5 +2,5 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "dotnet out/Tenanzia.API.dll"
+startCommand = "./out/Tenanzia.API"
 restartPolicyType = "on_failure"
