@@ -89,6 +89,7 @@ namespace Tenanzia.API
                 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
                 var app = builder.Build();
+                app.UseCors("AllowAngular");
 
                 if (app.Environment.IsDevelopment())
                 {
@@ -100,7 +101,6 @@ namespace Tenanzia.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
 
-                app.UseCors("AllowAngular");
                 app.UseAuthentication();
                 app.UseAuthorization();
                 app.MapControllers();
