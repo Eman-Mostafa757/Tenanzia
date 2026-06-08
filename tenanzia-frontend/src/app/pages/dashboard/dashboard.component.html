@@ -100,6 +100,14 @@
         <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalOrders }}</div>
         <div class="text-xs text-[#EF9F27] mt-2">{{ data.pendingOrders }} pending</div>
       </button>
+      <button
+        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#EF9F27] transition-colors"
+        [class.col-span-2]="isEmployee" (click)="goTo('tasks')">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
+        <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">Tasks</div>
+        <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalTasks }}</div>
+        <div class="text-xs text-[#666] mt-2">{{ data.toDoTasks }} to do</div>
+      </button>
 
       <div *ngIf="isManagerOrOwner"
         class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden">
@@ -109,14 +117,7 @@
         <div class="text-xs text-[#666] mt-2">{{ data.completedOrders }} completed</div>
       </div>
 
-      <button
-        class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#EF9F27] transition-colors"
-        [class.col-span-2]="isEmployee" (click)="goTo('tasks')">
-        <div class="absolute top-0 left-0 right-0 h-0.5 bg-[#EF9F27]"></div>
-        <div class="text-xs text-[#EF9F27] uppercase tracking-wider mb-3">Tasks</div>
-        <div class="text-3xl font-medium text-[#F0F0F2]">{{ data.totalTasks }}</div>
-        <div class="text-xs text-[#666] mt-2">{{ data.toDoTasks }} to do</div>
-      </button>
+      
     </div>
 
     <!-- Low Stock Alert -->
