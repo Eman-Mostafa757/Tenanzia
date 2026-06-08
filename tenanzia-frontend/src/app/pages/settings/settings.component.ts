@@ -37,6 +37,8 @@ export class SettingsComponent implements OnInit {
   isManager = false;
   isEmployee = false;
   isManagerOrOwner = false;
+  showMenu = false;
+
   constructor(
     private settingsService: SettingsService,
     private authService: AuthService,

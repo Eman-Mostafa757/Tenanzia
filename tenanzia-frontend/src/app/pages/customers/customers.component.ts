@@ -16,6 +16,7 @@ import { ExportService } from '../../services/export.service';
   templateUrl: './customers.component.html',
 })
 export class CustomersComponent implements OnInit {
+showMenu = false;
 
   customers: any[] = [];
   loading = true;

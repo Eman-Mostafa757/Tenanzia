@@ -1,49 +1,68 @@
 <div class="min-h-screen bg-[#0D0D0F]">
 
   <!-- Nav -->
-  <nav class="border-b border-[#1E1E24] px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
+ <nav class="border-b border-[#1E1E24] px-4 py-3">
+  <div class="flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
       <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
         <span class="text-white text-sm font-medium">T</span>
       </div>
       <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
     </div>
-    <div class="flex items-center gap-1">
-      <button (click)="goTo('dashboard')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
-      <button (click)="goTo('tasks')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Orders</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('products')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button *ngIf="isOwner" (click)="goTo('settings')"
-        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
-    </div>
-    <div class="flex items-center gap-3">
-      <app-notification-bell></app-notification-bell>
-      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
-        (click)="goTo('subscription')"> {{
-        curuntPlan?.planName || 'Free' }} plan</button>
-      <button (click)="logout()" class="text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">{{
-        username[0]?.toUpperCase() }}</div>
-      <!-- Theme Toggle -->
-      <button (click)="themeService.toggle()"
-        class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-        [class.bg-[#1E1E24]]="themeService.isDarkMode()" [class.bg-[#F0F0F4]]="!themeService.isDarkMode()"
-        [title]="themeService.isDarkMode() ? 'Switch to Light' : 'Switch to Dark'">
-        <span *ngIf="themeService.isDarkMode()" class="text-sm">☀️</span>
-        <span *ngIf="!themeService.isDarkMode()" class="text-sm">🌙</span>
-      </button>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1">
+      <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+      <button class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button *ngIf="isManagerOrOwner" (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
 
-  </nav>
+    <!-- Right Side -->
+    <div class="flex items-center gap-2">
+      <app-notification-bell></app-notification-bell>
+      <button *ngIf="isOwner" class="hidden md:block bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+        {{ curuntPlan?.planName || 'Free' }} plan
+      </button>
+      <button (click)="logout()" class="hidden md:block text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
+        {{ username[0]?.toUpperCase() }}
+      </div>
+      <!-- Hamburger -->
+      <button (click)="showMenu = !showMenu" class="md:hidden text-[#666] hover:text-[#F0F0F2]">
+        <svg *ngIf="!showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg *ngIf="showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
+    <button (click)="goTo('dashboard'); showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
+    <button *ngIf="isManagerOrOwner" (click)="goTo('customers'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
+    <button (click)="goTo('tasks'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
+    <button class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
+    <button *ngIf="isManagerOrOwner" (click)="goTo('products'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
+    <button *ngIf="isManagerOrOwner" (click)="goTo('invoices'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Invoices</button>
+    <button *ngIf="isManagerOrOwner" (click)="goTo('team'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Team</button>
+    <button (click)="goTo('settings'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Settings</button>
+    <div class="border-t border-[#1E1E24] pt-2 mt-1 flex items-center justify-between">
+      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+        {{ curuntPlan?.planName || 'Free' }} plan
+      </button>
+      <button (click)="logout()" class="text-xs text-[#D4537E] hover:text-[#E4638E]">Logout</button>
+    </div>
+  </div>
+</nav>
 
   <div class="p-6">
 

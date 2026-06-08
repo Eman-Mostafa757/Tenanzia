@@ -14,6 +14,7 @@ import { SubscriptionService } from '../../services/subscription.service';
   templateUrl: './employee-profile.component.html',
 })
 export class EmployeeProfileComponent implements OnInit {
+showMenu = false;
 
   profile: any = null;
   loading = true;

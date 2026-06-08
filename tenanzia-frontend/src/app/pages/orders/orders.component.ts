@@ -35,6 +35,7 @@ export class OrdersComponent implements OnInit {
   showStockIsNotHaveQuantaty = false;
   currentUserId: number | undefined;
   curuntPlan: any = null;
+showMenu = false;
 
   form: {
     customerId: number | null,

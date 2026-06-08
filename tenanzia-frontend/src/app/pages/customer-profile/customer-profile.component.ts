@@ -14,7 +14,7 @@ import { SubscriptionService } from '../../services/subscription.service';
   templateUrl: './customer-profile.component.html',
 })
 export class CustomerProfileComponent implements OnInit {
-
+showMenu = false;
   profile: any = null;
   loading = true;
   activeTab = 'orders';

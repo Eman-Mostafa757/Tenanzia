@@ -42,6 +42,7 @@ export class TeamComponent implements OnInit {
   isManager = false;
   isEmployee = false;
   isManagerOrOwner = false;
+showMenu = false;
 
   constructor(
     private teamService: TeamService,

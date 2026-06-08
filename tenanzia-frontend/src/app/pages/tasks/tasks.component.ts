@@ -40,6 +40,7 @@ export class TasksComponent implements OnInit {
   isManager = false;
   isEmployee = false;
   isManagerOrOwner = false;
+showMenu = false;
 
   constructor(
     private tasksService: TasksService,
