@@ -14,19 +14,19 @@
     <!-- Desktop Nav -->
     <div class="hidden md:flex items-center gap-1">
       <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
       <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
       <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button *ngIf="isManagerOrOwner" (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+      <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+      <button  (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+      <button  (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
       <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
     </div>
 
     <!-- Right Side -->
     <div class="flex items-center gap-2">
       <app-notification-bell></app-notification-bell>
-      <button *ngIf="isOwner" class="hidden md:block bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+      <button  class="hidden md:block bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
         {{ curuntPlan?.planName || 'Free' }} plan
       </button>
       <button (click)="logout()" class="hidden md:block text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
@@ -48,15 +48,15 @@
   <!-- Mobile Menu -->
   <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
     <button (click)="goTo('dashboard') ;showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
-    <button *ngIf="isManagerOrOwner"  class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
+    <button   class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
     <button (click)="goTo('tasks'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
     <button (click)="goTo('orders'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
-    <button *ngIf="isManagerOrOwner" (click)="goTo('products'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
-    <button *ngIf="isManagerOrOwner" (click)="goTo('invoices'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Invoices</button>
-    <button *ngIf="isManagerOrOwner" (click)="goTo('team'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Team</button>
+    <button  (click)="goTo('products'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
+    <button  (click)="goTo('invoices'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Invoices</button>
+    <button  (click)="goTo('team'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Team</button>
     <button (click)="goTo('settings'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Settings</button>
     <div class="border-t border-[#1E1E24] pt-2 mt-1 flex items-center justify-between">
-      <button *ngIf="isOwner" class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+      <button  class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
         {{ curuntPlan?.planName || 'Free' }} plan
       </button>
       <button (click)="logout()" class="text-xs text-[#D4537E] hover:text-[#E4638E]">Logout</button>

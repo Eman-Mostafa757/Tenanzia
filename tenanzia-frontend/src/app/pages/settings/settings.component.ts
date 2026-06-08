@@ -21,6 +21,7 @@ export class SettingsComponent implements OnInit {
   activeTab = 'profile';
   success = '';
   error = '';
+      username= '';
   curuntPlan: any = null;
   profileForm = {
     username: '',
@@ -53,6 +54,8 @@ export class SettingsComponent implements OnInit {
     this.isManager = this.authService.isManager();
     this.isEmployee = this.authService.isEmployee();
     this.isManagerOrOwner = this.authService.isManagerOrOwner();
+        this.username = this.authService.getUsername();
+
     this.loadMe();
     this.getCurrentPlan();
   }
