@@ -47,7 +47,7 @@
 
   <!-- Mobile Menu -->
   <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
-    <button (click)="goTo(dashboard);showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
+    <button (click)="goTo('dashboard');showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
     <button *ngIf="isManagerOrOwner" (click)="goTo('customers'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
     <button (click)="goTo('tasks'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
     <button (click)="goTo('orders'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
