@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit , AfterViewInit {
   ordersChart: any = null;
 username = '';
 curuntPlan :any=null;
-
+showMenu = false;
 isOwner = false;
 isManager = false;
 isEmployee = false;
