@@ -13,8 +13,8 @@
 
     <!-- Desktop Nav -->
     <div class="hidden md:flex items-center gap-1">
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg">Dashboard</button>
-      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
+      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg transition-colors">Dashboard</button>
+      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg">Customers</button>
       <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
       <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
       <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
@@ -48,7 +48,7 @@
   <!-- Mobile Menu -->
   <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
     <button (click)="goTo('dashboard') ;showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
-    <button   class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
+    <button  (click)="goTo('customer');showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
     <button (click)="goTo('tasks'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
     <button (click)="goTo('orders'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
     <button  (click)="goTo('products'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
