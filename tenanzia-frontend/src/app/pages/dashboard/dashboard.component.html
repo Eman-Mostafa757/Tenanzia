@@ -81,7 +81,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
       <button *ngIf="isManagerOrOwner"
         class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 relative overflow-hidden text-left hover:border-[#D4537E] transition-colors"
         (click)="goTo('customers')">
@@ -203,7 +203,7 @@
       <!-- Tasks Overview -->
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5">
         <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Tasks Overview</div>
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-[#0D0D0F] border border-[#1E1E24] rounded-lg p-3">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs text-[#666] uppercase tracking-wider">To Do</span>
