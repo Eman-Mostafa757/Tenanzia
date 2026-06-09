@@ -126,7 +126,25 @@ namespace Tenanzia.API.Services
     </html>";
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
-            await client.SendEmailAsync(msg);
+            try
+            {
+                var response = await client.SendEmailAsync(msg);
+
+                Console.WriteLine($"Status Code: {response.StatusCode}");
+
+                var body = await response.Body.ReadAsStringAsync();
+                Console.WriteLine(body);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("=== SENDGRID ERROR ===");
+                Console.WriteLine(ex.Message);
+
+                if (ex.InnerException != null)
+                    Console.WriteLine(ex.InnerException.Message);
+
+                throw;
+            }
         }
     }
 }
