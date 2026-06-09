@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { NotificationBellComponent } from '../../components/notification-bell/notification-bell.component';
 import { SubscriptionService } from '../../services/subscription.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-customer-profile',
@@ -26,7 +27,8 @@ curuntPlan :any = null;
     private route: ActivatedRoute,
     private router: Router,
       public themeService: ThemeService,
-      private subscriptionService: SubscriptionService
+      private subscriptionService: SubscriptionService,
+      private location: Location,
 
   ) {}
 
@@ -44,7 +46,9 @@ this.getCurrentPlan();
       });
     }
   }
-
+goBack() {
+  this.location.back();
+}
   getValueScoreClass() {
     if (this.profile?.valueScore === 'VIP') return 'bg-[#2A1F0A] text-[#EF9F27]';
     if (this.profile?.valueScore === 'Regular') return 'bg-[#1A1829] text-[#7F77DD]';
