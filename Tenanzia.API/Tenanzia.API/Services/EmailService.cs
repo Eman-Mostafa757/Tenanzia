@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 namespace Tenanzia.API.Services
 {
     public class EmailService
@@ -12,22 +14,17 @@ namespace Tenanzia.API.Services
         }
 
         public async Task SendInvoiceEmail(
-     string toEmail,
-     string toName,
-     int invoiceId,
-     int orderId,
-     decimal amount,
-     string status,
-     string companyName,
-     List<(string ProductName, int Quantity, decimal UnitPrice, decimal TotalPrice)> items)
+    string toEmail, string toName, int invoiceId,
+    int orderId, decimal amount, string status,
+    string companyName,
+    List<(string ProductName, int Quantity, decimal UnitPrice, decimal TotalPrice)> items)
         {
-            // ابني الـ items HTML
-            var itemsHtml = string.Join("", items.Select(i => $@"
-        <div class='invoice-row'>
-            <span class='label'>{i.ProductName} × {i.Quantity}</span>
-            <span class='value'>${i.UnitPrice:N0} × {i.Quantity} = ${i.TotalPrice:N0}</span>
-        </div>
-    "));
+            var apiKey = _config["SendGrid:ApiKey"];
+            var client = new SendGridClient(apiKey);
+
+            var from = new EmailAddress(_config["SendGrid:FromEmail"], companyName);
+            var to = new EmailAddress(toEmail, toName);
+            var subject = $"Invoice #{invoiceId} from {companyName} — ${amount:N0}";
 
             var htmlContent = $@"
     <!DOCTYPE html>
@@ -128,22 +125,8 @@ namespace Tenanzia.API.Services
     </body>
     </html>";
 
-            using var client = new SmtpClient(_config["Email:Host"], int.Parse(_config["Email:Port"]!))
-            {
-                Credentials = new NetworkCredential(_config["Email:Username"], _config["Email:Password"]),
-                EnableSsl = true
-            };
-
-            var message = new MailMessage
-            {
-                From = new MailAddress(_config["Email:Username"]!, _config["Email:FromName"]),
-                Subject = $"Invoice #{invoiceId} from {companyName} — ${amount:N0}",
-                Body = htmlContent,
-                IsBodyHtml = true
-            };
-
-            message.To.Add(new MailAddress(toEmail, toName));
-            await client.SendMailAsync(message);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
+            await client.SendEmailAsync(msg);
         }
     }
 }
