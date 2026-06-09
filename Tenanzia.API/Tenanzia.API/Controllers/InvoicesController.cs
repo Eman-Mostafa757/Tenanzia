@@ -49,6 +49,7 @@ namespace Tenanzia.API.Controllers
                     Id = i.Id,
                     OrderId = i.OrderId,
                     CustomerName = i.Order.Customer.Name,
+                    CustomerId = i.Order.CustomerId,
                     Status = i.Status,
                     Amount = i.Amount,
                     IssuedAt = i.IssuedAt,
