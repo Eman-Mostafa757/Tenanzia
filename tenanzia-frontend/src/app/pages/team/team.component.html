@@ -86,41 +86,27 @@
     <!-- Loading -->
     <div *ngIf="loading" class="text-center py-20 text-[#666] text-sm">Loading...</div>
     <!-- Workload Section -->
-    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
-      <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Team Workload</div>
+   <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
+  <div class="text-xs text-[#666] uppercase tracking-wider mb-4">Team Workload</div>
 
-      <div class="space-y-3">
-        <div *ngFor="let member of workload"
-          class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
-          (click)="goTo('team/' + member.id)">
+  <div class="space-y-3">
+    <div *ngFor="let member of workload"
+      class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 cursor-pointer hover:opacity-80 transition-opacity p-2 rounded-lg hover:bg-[#1A1A20]"
+      (click)="goTo('team/' + member.id)">
 
-          <!-- Avatar + Name -->
-          <div class="flex items-center gap-2 w-36 flex-shrink-0">
-            <div
-              class="w-7 h-7 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white flex-shrink-0">
-              {{ member.username[0]?.toUpperCase() }}
-            </div>
-            <span class="text-xs text-[#F0F0F2] truncate">{{ member.username }}</span>
+      <!-- Row 1 on mobile: Avatar + Name + Badge + Warning -->
+      <div class="flex items-center justify-between md:justify-start md:w-36 md:flex-shrink-0 gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-[#D4537E] flex items-center justify-center text-xs text-white flex-shrink-0">
+            {{ member.username[0]?.toUpperCase() }}
           </div>
-
-          <!-- Activity Dot -->
-          <div class="w-1.5 h-1.5 rounded-full flex-shrink-0" [class]="getActivityDot(member.activityStatus)"></div>
-
-          <!-- Progress Bar -->
-          <div class="flex-1 h-2 bg-[#1E1E24] rounded-full overflow-hidden">
-            <div class="h-full rounded-full transition-all duration-500"
-              [class]="getWorkloadColor(member.workloadLevel)" [style.width.%]="getWorkloadWidth(member.activeTasks)">
-            </div>
-          </div>
-
-          <!-- Tasks Count -->
-          <div class="text-xs text-[#666] w-20 flex-shrink-0">
-            {{ member.activeTasks }} active
-          </div>
-
-          <!-- Workload Badge -->
+          <span class="text-xs text-[#F0F0F2] truncate max-w-[100px]">{{ member.username }}</span>
+        </div>
+        <!-- Mobile: Badge + Warning -->
+        <div class="flex items-center gap-2 md:hidden">
           <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0"
-            [class.bg-[#1E1E24]]="member.workloadLevel === 'Free'" [class.text-[#666]]="member.workloadLevel === 'Free'"
+            [class.bg-[#1E1E24]]="member.workloadLevel === 'Free'"
+            [class.text-[#666]]="member.workloadLevel === 'Free'"
             [class.bg-[#12251E]]="member.workloadLevel === 'Normal'"
             [class.text-[#5DCAA5]]="member.workloadLevel === 'Normal'"
             [class.bg-[#2A1F0A]]="member.workloadLevel === 'Heavy'"
@@ -129,42 +115,72 @@
             [class.text-[#ED93B1]]="member.workloadLevel === 'Overloaded'">
             {{ member.workloadLevel }}
           </span>
-
-          <!-- Completion Rate -->
-          <div class="text-xs text-[#666] w-12 text-right flex-shrink-0">
-            {{ member.completionRate }}%
-          </div>
-
-          <!-- Overdue Warning -->
-          <div class="w-4 flex-shrink-0">
-            <span *ngIf="member.overdueTasks > 0" class="text-[#D4537E] text-xs" title="Has overdue tasks">⚠</span>
-          </div>
-
+          <span *ngIf="member.overdueTasks > 0" class="text-[#D4537E] text-xs">⚠</span>
         </div>
       </div>
 
-      <!-- Legend -->
-      <div class="flex items-center gap-4 mt-4 pt-4 border-t border-[#1E1E24]">
-        <span class="text-xs text-[#666]">Workload:</span>
-        <span class="flex items-center gap-1 text-xs text-[#666]">
-          <span class="w-2 h-2 rounded-full bg-[#1E1E24]"></span> Free
+      <!-- Row 2 on mobile: Progress Bar + Stats -->
+      <div class="flex items-center gap-2 flex-1">
+        <!-- Activity Dot -->
+        <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 hidden md:block"
+          [class]="getActivityDot(member.activityStatus)"></div>
+
+        <!-- Progress Bar -->
+        <div class="flex-1 h-2 bg-[#1E1E24] rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-500"
+            [class]="getWorkloadColor(member.workloadLevel)"
+            [style.width.%]="getWorkloadWidth(member.activeTasks)">
+          </div>
+        </div>
+
+        <!-- Tasks + Completion -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="text-xs text-[#666]">{{ member.activeTasks }} active</span>
+          <span class="text-xs text-[#666]">{{ member.completionRate }}%</span>
+        </div>
+
+        <!-- Desktop: Badge + Warning -->
+        <span class="hidden md:inline text-xs px-2 py-0.5 rounded-full flex-shrink-0"
+          [class.bg-[#1E1E24]]="member.workloadLevel === 'Free'"
+          [class.text-[#666]]="member.workloadLevel === 'Free'"
+          [class.bg-[#12251E]]="member.workloadLevel === 'Normal'"
+          [class.text-[#5DCAA5]]="member.workloadLevel === 'Normal'"
+          [class.bg-[#2A1F0A]]="member.workloadLevel === 'Heavy'"
+          [class.text-[#EF9F27]]="member.workloadLevel === 'Heavy'"
+          [class.bg-[#3C1528]]="member.workloadLevel === 'Overloaded'"
+          [class.text-[#ED93B1]]="member.workloadLevel === 'Overloaded'">
+          {{ member.workloadLevel }}
         </span>
-        <span class="flex items-center gap-1 text-xs text-[#5DCAA5]">
-          <span class="w-2 h-2 rounded-full bg-[#5DCAA5]"></span> Normal
-        </span>
-        <span class="flex items-center gap-1 text-xs text-[#EF9F27]">
-          <span class="w-2 h-2 rounded-full bg-[#EF9F27]"></span> Heavy
-        </span>
-        <span class="flex items-center gap-1 text-xs text-[#ED93B1]">
-          <span class="w-2 h-2 rounded-full bg-[#D4537E]"></span> Overloaded
-        </span>
-        <span class="flex items-center gap-1 text-xs text-[#666] ml-4">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#5DCAA5]"></span> Active
-          <span class="w-1.5 h-1.5 rounded-full bg-[#D4537E] ml-2"></span> Overdue
-          <span class="w-1.5 h-1.5 rounded-full bg-[#666] ml-2"></span> Idle
-        </span>
+        <div class="w-4 flex-shrink-0 hidden md:block">
+          <span *ngIf="member.overdueTasks > 0" class="text-[#D4537E] text-xs">⚠</span>
+        </div>
       </div>
+
     </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-[#1E1E24]">
+    <span class="text-xs text-[#666]">Workload:</span>
+    <span class="flex items-center gap-1 text-xs text-[#666]">
+      <span class="w-2 h-2 rounded-full bg-[#1E1E24]"></span> Free
+    </span>
+    <span class="flex items-center gap-1 text-xs text-[#5DCAA5]">
+      <span class="w-2 h-2 rounded-full bg-[#5DCAA5]"></span> Normal
+    </span>
+    <span class="flex items-center gap-1 text-xs text-[#EF9F27]">
+      <span class="w-2 h-2 rounded-full bg-[#EF9F27]"></span> Heavy
+    </span>
+    <span class="flex items-center gap-1 text-xs text-[#ED93B1]">
+      <span class="w-2 h-2 rounded-full bg-[#D4537E]"></span> Overloaded
+    </span>
+    <span class="flex items-center gap-1 text-xs text-[#666]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#5DCAA5]"></span> Active
+      <span class="w-1.5 h-1.5 rounded-full bg-[#D4537E] ml-1"></span> Overdue
+      <span class="w-1.5 h-1.5 rounded-full bg-[#666] ml-1"></span> Idle
+    </span>
+  </div>
+</div>
     <!-- Members Table -->
     <div *ngIf="!loading" class="bg-[#111114] border border-[#1E1E24] rounded-xl overflow-x-auto">
       <table class="w-full min-w-[600px]">
