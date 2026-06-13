@@ -28,7 +28,7 @@ registeredEmail = '';
 
   constructor(
     private authService: AuthService,
-    private router: Router,
+    public router: Router,
       public themeService: ThemeService
 
   ) {}
