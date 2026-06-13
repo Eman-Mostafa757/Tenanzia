@@ -7,6 +7,7 @@ using Tenanzia.API.DTOs;
 using Tenanzia.API.Helpers;
 using Tenanzia.API.Interfaces;
 using Tenanzia.API.Models;
+using Tenanzia.API.Services;
 
 namespace Tenanzia.API.Controllers
 {
@@ -26,42 +27,44 @@ namespace Tenanzia.API.Controllers
         }
         [AllowAnonymous]
         [HttpPost("Register")]
-        public IActionResult Register(RegisterDto dto)
+        public async Task<IActionResult> Register(RegisterDto dto,
+    [FromServices] EmailService emailService)
         {
-            if (_context.Users.Any(x => x.Email == dto.Email))
-                return BadRequest("Email already in use");
+            if (_context.Users.Any(u => u.Email == dto.Email))
+                return BadRequest("Email already exists");
 
-            // 1. Create user
+            var verificationToken = Guid.NewGuid().ToString();
+
             var user = new User
             {
                 Username = dto.Username,
                 Email = dto.Email,
                 PasswordHash = PasswordHelper.HashPassword(dto.Password),
+                IsEmailVerified = false,
+                EmailVerificationToken = verificationToken,
+                EmailVerificationExpiry = DateTime.UtcNow.AddHours(24)
             };
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            _context.UserRoles.Add(new UserRole
-            {
-                UserId = user.Id,
-                RoleId = _context.Roles.FirstOrDefault(r => r.Name == "Owner")?.Id ?? 0
-            });
 
-            // 2. Create tenant
-            var tenant = new Tenant { Name = dto.CompanyName };
+            _context.Users.Add(user);
+
+            // Create Tenant
+            var tenant = new Tenant { Name = dto.CompanyName, CreatedAt = DateTime.UtcNow };
             _context.Tenants.Add(tenant);
             _context.SaveChanges();
 
-            // 3. Link user to tenant
-            _context.UserTenants.Add(new UserTenant
+            // Assign Owner Role
+            var ownerRole = _context.Roles.FirstOrDefault(r => r.Name == "Owner");
+            if (ownerRole != null)
             {
-                UserId = user.Id,
-                TenantId = tenant.Id
-            });
+                _context.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = ownerRole.Id });
+                _context.UserTenants.Add(new UserTenant { UserId = user.Id, TenantId = tenant.Id });
+            }
 
+            // Free Plan
             var freePlan = _context.Plans.FirstOrDefault(p => p.Name == "Free");
             if (freePlan != null)
             {
-                _context.Subscriptions.Add(new Subscription
+                _context.Subscriptions.Add(new Models.Subscription
                 {
                     TenantId = tenant.Id,
                     PlanId = freePlan.Id,
@@ -72,8 +75,13 @@ namespace Tenanzia.API.Controllers
 
             _context.SaveChanges();
 
-            return Ok("Registered successfully");
+            // Send Verification Email
+            var baseUrl = "https://tenanzia.vercel.app";
+            await emailService.SendVerificationEmail(user.Email, user.Username, verificationToken, baseUrl);
+
+            return Ok("Registration successful! Please check your email to verify your account.");
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -89,6 +97,10 @@ namespace Tenanzia.API.Controllers
             // بعدين تحققي من الـ Password بـ BCrypt.Verify
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized("Invalid credentials");
+            // Check Email Verification
+            if (!user.IsEmailVerified)
+                return Unauthorized("Please verify your email before logging in");
+
 
             var userTenant = _context.UserTenants
                 .Include(ut => ut.Tenant)
@@ -105,6 +117,64 @@ namespace Tenanzia.API.Controllers
 
             var token = _jwtHelper.GenerateToken(user, userTenant.TenantId, userTenant.Tenant.Name, roleName);
             return Ok(new { token });
+        }
+
+        // Verify Email
+        [HttpGet("verify-email")]
+        public IActionResult VerifyEmail([FromQuery] string token)
+        {
+            var user = _context.Users.FirstOrDefault(u =>
+                u.EmailVerificationToken == token &&
+                u.EmailVerificationExpiry > DateTime.UtcNow);
+
+            if (user == null)
+                return BadRequest("Invalid or expired verification link");
+
+            user.IsEmailVerified = true;
+            user.EmailVerificationToken = null;
+            user.EmailVerificationExpiry = null;
+            _context.SaveChanges();
+
+            return Ok("Email verified successfully! You can now login.");
+        }
+
+        // Forgot Password
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] string email,
+            [FromServices] EmailService emailService)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+                return Ok("If this email exists, you will receive a reset link.");
+
+            var resetToken = Guid.NewGuid().ToString();
+            user.PasswordResetToken = resetToken;
+            user.PasswordResetExpiry = DateTime.UtcNow.AddHours(1);
+            _context.SaveChanges();
+
+            var baseUrl = "https://tenanzia.vercel.app";
+            await emailService.SendPasswordResetEmail(user.Email, user.Username, resetToken, baseUrl);
+
+            return Ok("Password reset link sent to your email.");
+        }
+
+        // Reset Password
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword(ResetPasswordDto dto)
+        {
+            var user = _context.Users.FirstOrDefault(u =>
+                u.PasswordResetToken == dto.Token &&
+                u.PasswordResetExpiry > DateTime.UtcNow);
+
+            if (user == null)
+                return BadRequest("Invalid or expired reset link");
+
+            user.PasswordHash = PasswordHelper.HashPassword(dto.NewPassword);
+            user.PasswordResetToken = null;
+            user.PasswordResetExpiry = null;
+            _context.SaveChanges();
+
+            return Ok("Password reset successfully!");
         }
 
         [Authorize]

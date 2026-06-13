@@ -107,5 +107,68 @@ namespace Tenanzia.API.Services
                 throw new Exception($"SendGrid error: {body}");
             }
         }
+
+
+        public async Task SendVerificationEmail(string toEmail, string toName, string token, string baseUrl)
+        {
+            var apiKey = _config["SendGrid:ApiKey"];
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress(_config["SendGrid:FromEmail"], "Tenanzia");
+            var to = new EmailAddress(toEmail, toName);
+            var subject = "Verify your Tenanzia account";
+            var verifyUrl = $"{baseUrl}/verify-email?token={token}";
+
+            var html = $@"
+    <div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto'>
+      <div style='background:#D4537E;padding:30px;text-align:center'>
+        <h1 style='color:white;margin:0'>Tenanzia</h1>
+      </div>
+      <div style='padding:30px;background:white'>
+        <h2 style='color:#333'>Verify your email</h2>
+        <p style='color:#666'>Hi {toName}, please verify your email to activate your account.</p>
+        <div style='text-align:center;margin:30px 0'>
+          <a href='{verifyUrl}' 
+             style='background:#D4537E;color:white;padding:12px 30px;border-radius:8px;text-decoration:none;font-size:16px'>
+            Verify Email
+          </a>
+        </div>
+        <p style='color:#999;font-size:12px'>Link expires in 24 hours.</p>
+      </div>
+    </div>";
+
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", html);
+            await client.SendEmailAsync(msg);
+        }
+
+        public async Task SendPasswordResetEmail(string toEmail, string toName, string token, string baseUrl)
+        {
+            var apiKey = _config["SendGrid:ApiKey"];
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress(_config["SendGrid:FromEmail"], "Tenanzia");
+            var to = new EmailAddress(toEmail, toName);
+            var subject = "Reset your Tenanzia password";
+            var resetUrl = $"{baseUrl}/reset-password?token={token}";
+
+            var html = $@"
+    <div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto'>
+      <div style='background:#D4537E;padding:30px;text-align:center'>
+        <h1 style='color:white;margin:0'>Tenanzia</h1>
+      </div>
+      <div style='padding:30px;background:white'>
+        <h2 style='color:#333'>Reset your password</h2>
+        <p style='color:#666'>Hi {toName}, click below to reset your password.</p>
+        <div style='text-align:center;margin:30px 0'>
+          <a href='{resetUrl}'
+             style='background:#D4537E;color:white;padding:12px 30px;border-radius:8px;text-decoration:none;font-size:16px'>
+            Reset Password
+          </a>
+        </div>
+        <p style='color:#999;font-size:12px'>Link expires in 1 hour. If you didn't request this, ignore this email.</p>
+      </div>
+    </div>";
+
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", html);
+            await client.SendEmailAsync(msg);
+        }
     }
 }

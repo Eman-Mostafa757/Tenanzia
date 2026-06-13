@@ -15,10 +15,16 @@ import { SubscriptionComponent } from './pages/subscription/subscription.compone
 import { ProductsComponent } from './pages/products/products.component';
 import { managerGuard } from './guards/manager.guard';
 import { ownerGuard } from './guards/owner.guard';
+import { VerifyEmailComponent } from './pages/verify-email/verify-email.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'verify-email', component: VerifyEmailComponent },
+{ path: 'forgot-password', component: ForgotPasswordComponent },
+{ path: 'reset-password', component: ResetPasswordComponent },
 
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
