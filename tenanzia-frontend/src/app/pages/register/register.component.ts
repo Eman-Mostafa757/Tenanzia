@@ -12,7 +12,8 @@ import { ThemeService } from '../../services/theme.service';
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
-
+registered = false;
+registeredEmail = '';
   form = {
     username: '',
     email: '',
@@ -65,7 +66,9 @@ export class RegisterComponent {
       companyName: this.form.companyName
     }).subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.loading = false;
+      this.registered = true;
+      this.registeredEmail = this.form.email;
       },
       error: (err) => {
         this.loading = false;
@@ -73,4 +76,5 @@ export class RegisterComponent {
       }
     });
   }
+  
 }
