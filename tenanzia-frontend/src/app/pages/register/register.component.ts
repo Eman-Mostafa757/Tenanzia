@@ -71,9 +71,14 @@ registeredEmail = '';
       this.registeredEmail = this.form.email;
       },
       error: (err) => {
-        this.loading = false;
-        this.error = err.error || 'Registration failed';
-      }
+  console.log(err);
+  this.loading = false;
+
+  this.error =
+    err.error?.message ||
+    err.message ||
+    'Registration failed';
+}
     });
   }
   
