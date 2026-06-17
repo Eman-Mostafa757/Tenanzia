@@ -13,7 +13,8 @@
 
       <!-- Desktop Nav -->
       <div class="hidden md:flex items-center gap-1">
-        <button (click)="goTo('dashboard')" class="px-3 py-1.5 text-xs  rounded-lg transition-colors">Dashboard</button>
+        <button (click)="goTo('dashboard')" 
+        class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Dashboard</button>
         <button *ngIf="isManagerOrOwner" (click)="goTo('customers')"
           class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Customers</button>
         <button (click)="goTo('tasks')"
