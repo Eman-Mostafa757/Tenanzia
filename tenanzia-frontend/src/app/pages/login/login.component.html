@@ -25,12 +25,13 @@
       <div class="mb-2">
         <div class="flex items-center justify-between mb-2">
           <label class="text-xs text-[#666] uppercase tracking-wider">Password</label>
-          <a routerLink="/forgot-password" class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
+         
+        <input type="password" [(ngModel)]="password" placeholder="••••••••"
+          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
+           <a routerLink="/forgot-password" class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
             Forgot password?
           </a>
         </div>
-        <input type="password" [(ngModel)]="password" placeholder="••••••••"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
       </div>
 
       <button (click)="onLogin()" [disabled]="loading"
