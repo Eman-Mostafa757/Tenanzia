@@ -22,6 +22,10 @@ showMenu = false;
 username = '';
 curuntPlan :any = null;
 showUserMenu = false;
+  isOwner = false;
+  isManager = false;
+  isEmployee = false;
+  isManagerOrOwner = false;
   constructor(
     private customersService: CustomersService,
     private authService: AuthService,
@@ -34,6 +38,10 @@ showUserMenu = false;
   ) {}
 
   ngOnInit() {
+     this.isOwner = this.authService.isOwner();
+    this.isManager = this.authService.isManager();
+    this.isEmployee = this.authService.isEmployee();
+    this.isManagerOrOwner = this.authService.isManagerOrOwner();
        this.username = this.authService.getUsername();
 this.getCurrentPlan();
     const id = this.route.snapshot.paramMap.get('id');

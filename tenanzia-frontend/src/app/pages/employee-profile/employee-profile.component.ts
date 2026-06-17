@@ -20,6 +20,10 @@ showUserMenu = false;
   loading = true;
   username ='';
   curuntPlan:any=null;
+    isOwner = false;
+  isManager = false;
+  isEmployee = false;
+  isManagerOrOwner = false;
 
   constructor(
     private teamService: TeamService,
@@ -33,6 +37,10 @@ showUserMenu = false;
 
   ngOnInit() {
       this.username = this.authService.getUsername();
+       this.isOwner = this.authService.isOwner();
+    this.isManager = this.authService.isManager();
+    this.isEmployee = this.authService.isEmployee();
+    this.isManagerOrOwner = this.authService.isManagerOrOwner();
 this.getCurrentPlan();
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
