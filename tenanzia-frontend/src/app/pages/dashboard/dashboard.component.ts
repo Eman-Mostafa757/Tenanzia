@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit , AfterViewInit {
 
  @ViewChild('revenueChart') revenueChartRef!: ElementRef;
   @ViewChild('ordersChart') ordersChartRef!: ElementRef
-
+showUserMenu = false;
   data: any = null;
   loading = true;
     chartData: any[] = [];

@@ -30,13 +30,13 @@ namespace Tenanzia.API.Controllers
         public async Task<IActionResult> Register(RegisterDto dto,
     [FromServices] EmailService emailService)
         {
-            // امسح الأكونتات القديمة اللي مش verified
-            var expiredAccounts = _context.Users
-                .Where(u => !u.IsEmailVerified &&
-                            u.EmailVerificationExpiry < DateTime.UtcNow)
-                .ToList();
-            _context.Users.RemoveRange(expiredAccounts);
-            _context.SaveChanges();
+            //// امسح الأكونتات القديمة اللي مش verified
+            //var expiredAccounts = _context.Users
+            //    .Where(u => !u.IsEmailVerified &&
+            //                u.EmailVerificationExpiry < DateTime.UtcNow)
+            //    .ToList();
+            //_context.Users.RemoveRange(expiredAccounts);
+            //_context.SaveChanges();
 
             if (_context.Users.Any(u => u.Email == dto.Email))
                 return BadRequest("Email already exists");
