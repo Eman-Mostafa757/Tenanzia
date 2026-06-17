@@ -18,40 +18,29 @@
 
       <div class="mb-5">
         <label class="block text-xs text-[#666] uppercase tracking-wider mb-2">Email</label>
-        <input
-          type="email"
-          [(ngModel)]="email"
-          placeholder="you@company.com"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"
-        />
+        <input type="email" [(ngModel)]="email" placeholder="you@company.com"
+          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
       </div>
 
-      <div class="mb-8">
-        <label class="block text-xs text-[#666] uppercase tracking-wider mb-2">Password</label>
-        <input
-          type="password"
-          [(ngModel)]="password"
-          placeholder="••••••••"
-          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"
-        />
+      <div class="mb-2">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs text-[#666] uppercase tracking-wider">Password</label>
+          <a routerLink="/forgot-password" class="text-xs text-[#D4537E] hover:text-[#E4638E] transition-colors">
+            Forgot password?
+          </a>
+        </div>
+        <input type="password" [(ngModel)]="password" placeholder="••••••••"
+          class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-3 text-[#F0F0F2] text-sm placeholder-[#333] focus:outline-none focus:border-[#D4537E] transition-colors"/>
       </div>
-    
-      <p class="text-center text-[#666] text-sm mt-6">
-  <a routerLink="/forgot-password" class="text-[#D4537E] hover:text-[#E4638E]">
-    Forgot password?
-  </a>
-</p>
 
-      <button
-        (click)="onLogin()"
-        [disabled]="loading"
-        class="w-full bg-[#D4537E] hover:bg-[#C4436E] disabled:opacity-50 text-white rounded-xl py-3 text-sm font-medium transition-colors">
+      <button (click)="onLogin()" [disabled]="loading"
+        class="w-full bg-[#D4537E] hover:bg-[#C4436E] disabled:opacity-50 text-white rounded-xl py-3 text-sm font-medium transition-colors mt-6">
         {{ loading ? 'Signing in...' : 'Sign in' }}
       </button>
 
       <p class="text-center text-[#666] text-sm mt-6">
         Don't have an account?
-<a routerLink="/register" class="text-[#D4537E] hover:text-[#E4638E]">Create one</a>
+        <a routerLink="/register" class="text-[#D4537E] hover:text-[#E4638E]">Create one</a>
       </p>
     </div>
 
