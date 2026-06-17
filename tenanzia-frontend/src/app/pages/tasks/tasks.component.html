@@ -301,7 +301,7 @@
           <input type="date" [(ngModel)]="form.dueDate"
             class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors" />
         </div>
-        <div *ngIf="isManager">
+        <div *ngIf="isManagerOrOwner">
           <label class="block text-xs text-[#666] uppercase tracking-wider mb-1.5">Assign To</label>
           <select [(ngModel)]="form.assignedToUserId"
             class="w-full bg-[#0D0D0F] border border-[#1E1E24] rounded-xl px-4 py-2.5 text-[#F0F0F2] text-sm focus:outline-none focus:border-[#D4537E] transition-colors">
