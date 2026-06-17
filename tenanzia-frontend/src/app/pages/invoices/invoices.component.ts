@@ -18,7 +18,7 @@ import { SubscriptionService } from '../../services/subscription.service';
 export class InvoicesComponent implements OnInit {
   sending: { [key: number]: boolean } = {};
 showMenu = false;
-
+showUserMenu = false;
   invoices: any[] = [];
   filteredInvoices: any[] = [];
   loading = true;

@@ -43,7 +43,7 @@ export class TeamComponent implements OnInit {
   isEmployee = false;
   isManagerOrOwner = false;
 showMenu = false;
-
+showUserMenu = false;
   constructor(
     private teamService: TeamService,
     private authService: AuthService,

@@ -21,6 +21,7 @@ showMenu = false;
   activeTab = 'orders';
 username = '';
 curuntPlan :any = null;
+showUserMenu = false;
   constructor(
     private customersService: CustomersService,
     private authService: AuthService,

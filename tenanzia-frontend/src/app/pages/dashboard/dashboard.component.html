@@ -26,8 +26,7 @@
           class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
         <button *ngIf="isManagerOrOwner" (click)="goTo('team')"
           class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-        <button (click)="goTo('settings')"
-          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
+       
       </div>
 
       <!-- Right Side -->
@@ -37,8 +36,7 @@
           (click)="goTo('subscription')">
           {{ curuntPlan?.planName || 'Free' }} plan
         </button>
-        <button (click)="logout()"
-          class="hidden md:block text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
+        
         <!-- <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
         {{ username[0]?.toUpperCase() }}
       </div> -->

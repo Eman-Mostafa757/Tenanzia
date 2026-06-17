@@ -17,7 +17,7 @@ export class SubscriptionComponent implements OnInit {
   loading = true;
   success = '';
   error = '';
-
+showUserMenu = false;
   constructor(
     private subscriptionService: SubscriptionService,
     private authService: AuthService,

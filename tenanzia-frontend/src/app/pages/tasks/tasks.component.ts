@@ -41,7 +41,7 @@ export class TasksComponent implements OnInit {
   isEmployee = false;
   isManagerOrOwner = false;
 showMenu = false;
-
+showUserMenu = false;
   constructor(
     private tasksService: TasksService,
     private authService: AuthService,

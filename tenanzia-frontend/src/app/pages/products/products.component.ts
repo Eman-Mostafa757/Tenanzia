@@ -39,7 +39,7 @@ export class ProductsComponent implements OnInit {
   isEmployee = false;
   isManagerOrOwner = false;
   showMenu = false;
-
+showUserMenu = false;
   constructor(
     private productsService: ProductsService,
     private authService: AuthService,

@@ -2,67 +2,119 @@
 
   <!-- Nav -->
   <nav class="border-b border-[#1E1E24] px-4 py-3">
-  <div class="flex items-center justify-between">
-    <!-- Logo -->
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
-        <span class="text-white text-sm font-medium">T</span>
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-[#D4537E] rounded-lg flex items-center justify-center">
+          <span class="text-white text-sm font-medium">T</span>
+        </div>
+        <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
       </div>
-      <span class="text-[#F0F0F2] font-medium">Tenanzia</span>
-    </div>
 
-    <!-- Desktop Nav -->
-    <div class="hidden md:flex items-center gap-1">
-      <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg transition-colors">Dashboard</button>
-      <button  (click)="goTo('customers')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg">Customers</button>
-      <button (click)="goTo('tasks')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
-      <button (click)="goTo('orders')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
-      <button (click)="goTo('products')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
-      <button  (click)="goTo('invoices')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
-      <button  (click)="goTo('team')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
-      <button (click)="goTo('settings')" class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Settings</button>
-    </div>
-
-    <!-- Right Side -->
-    <div class="flex items-center gap-2">
-      <app-notification-bell></app-notification-bell>
-      <button  class="hidden md:block bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
-        {{ curuntPlan?.planName || 'Free' }} plan
-      </button>
-      <button (click)="logout()" class="hidden md:block text-xs text-[#666] hover:text-[#F0F0F2] transition-colors">Logout</button>
-      <div class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium">
-        {{ username[0]?.toUpperCase() }}
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1">
+        <button class="px-3 py-1.5 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg transition-colors">Dashboard</button>
+        <button (click)="goTo('customers')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg">Customers</button>
+        <button (click)="goTo('tasks')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Tasks</button>
+        <button (click)="goTo('orders')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Orders</button>
+        <button (click)="goTo('products')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Products</button>
+        <button (click)="goTo('invoices')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Invoices</button>
+        <button (click)="goTo('team')"
+          class="px-3 py-1.5 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg transition-colors">Team</button>
+        
       </div>
-      <!-- Hamburger -->
-      <button (click)="showMenu = !showMenu" class="md:hidden text-[#666] hover:text-[#F0F0F2]">
-        <svg *ngIf="!showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-        <svg *ngIf="showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-  </div>
 
-  <!-- Mobile Menu -->
-  <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
-    <button (click)="goTo('dashboard') ;showMenu=false" class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
-    <button  (click)="goTo('customer');showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
-    <button (click)="goTo('tasks'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
-    <button (click)="goTo('orders'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
-    <button  (click)="goTo('products'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
-    <button  (click)="goTo('invoices'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Invoices</button>
-    <button  (click)="goTo('team'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Team</button>
-    <button (click)="goTo('settings'); showMenu=false" class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Settings</button>
-    <div class="border-t border-[#1E1E24] pt-2 mt-1 flex items-center justify-between">
-      <button  class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
-        {{ curuntPlan?.planName || 'Free' }} plan
-      </button>
-      <button (click)="logout()" class="text-xs text-[#D4537E] hover:text-[#E4638E]">Logout</button>
+      <!-- Right Side -->
+      <div class="flex items-center gap-2">
+        <app-notification-bell></app-notification-bell>
+        <button class="hidden md:block bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full"
+          (click)="goTo('subscription')">
+          {{ curuntPlan?.planName || 'Free' }} plan
+        </button>
+        <!-- User Menu -->
+        <div class="relative">
+          <button (click)="showUserMenu = !showUserMenu"
+            class="w-8 h-8 bg-[#D4537E] rounded-full flex items-center justify-center text-white text-xs font-medium hover:opacity-80 transition-opacity">
+            {{ username[0]?.toUpperCase() }}
+          </button>
+
+          <!-- Dropdown -->
+          <div *ngIf="showUserMenu"
+            class="absolute right-0 top-10 w-48 bg-[#111114] border border-[#1E1E24] rounded-xl shadow-2xl z-50 overflow-hidden">
+
+            <!-- User Info -->
+            <div class="px-4 py-3 border-b border-[#1E1E24]">
+              <div class="text-sm font-medium text-[#F0F0F2]">{{ username }}</div>
+              <div class="text-xs text-[#666] mt-0.5">{{ curuntPlan?.planName || 'Free' }} Plan</div>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="py-1">
+              <button (click)="goTo('settings'); showUserMenu = false"
+                class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-[#666] hover:text-[#F0F0F2] hover:bg-[#1A1A20] transition-colors text-left">
+                ⚙️ Settings
+              </button>
+              <button *ngIf="isOwner" (click)="goTo('subscription'); showUserMenu = false"
+                class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-[#666] hover:text-[#F0F0F2] hover:bg-[#1A1A20] transition-colors text-left">
+                💳 Subscription
+              </button>
+              <div class="border-t border-[#1E1E24] my-1"></div>
+              <button (click)="logout(); showUserMenu = false"
+                class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-[#D4537E] hover:bg-[#1A1A20] transition-colors text-left">
+                🚪 Logout
+              </button>
+            </div>
+          </div>
+
+          <!-- Backdrop -->
+          <div *ngIf="showUserMenu" class="fixed inset-0 z-40" (click)="showUserMenu = false">
+          </div>
+        </div>
+        <!-- Hamburger -->
+        <button (click)="showMenu = !showMenu" class="md:hidden text-[#666] hover:text-[#F0F0F2]">
+          <svg *ngIf="!showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg *ngIf="showMenu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-</nav>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="showMenu" class="md:hidden mt-3 pb-2 border-t border-[#1E1E24] pt-3 flex flex-col gap-1">
+      <button (click)="goTo('dashboard') ;showMenu=false"
+        class="px-3 py-2 text-xs text-[#F0F0F2] bg-[#1A1A20] rounded-lg text-left">Dashboard</button>
+      <button (click)="goTo('customer');showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Customers</button>
+      <button (click)="goTo('tasks'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Tasks</button>
+      <button (click)="goTo('orders'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Orders</button>
+      <button (click)="goTo('products'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Products</button>
+      <button (click)="goTo('invoices'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Invoices</button>
+      <button (click)="goTo('team'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Team</button>
+      <button (click)="goTo('settings'); showMenu=false"
+        class="px-3 py-2 text-xs text-[#666] hover:text-[#F0F0F2] rounded-lg text-left">Settings</button>
+      <div class="border-t border-[#1E1E24] pt-2 mt-1 flex items-center justify-between">
+        <button class="bg-[#3C1528] text-[#ED93B1] text-xs px-3 py-1 rounded-full" (click)="goTo('subscription')">
+          {{ curuntPlan?.planName || 'Free' }} plan
+        </button>
+        <button (click)="logout()" class="text-xs text-[#D4537E] hover:text-[#E4638E]">Logout</button>
+      </div>
+    </div>
+  </nav>
 
   <!-- Loading -->
   <div *ngIf="loading" class="flex items-center justify-center h-96">
@@ -72,64 +124,65 @@
   <div *ngIf="!loading && profile" class="p-6">
 
     <!-- Back -->
-    <button (click)="goBack()" class="flex items-center gap-2 text-[#666] hover:text-[#F0F0F2] text-sm mb-6 transition-colors">
+    <button (click)="goBack()"
+      class="flex items-center gap-2 text-[#666] hover:text-[#F0F0F2] text-sm mb-6 transition-colors">
       ← Back
     </button>
 
     <!-- Profile Header -->
-   <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
-  <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+    <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-5 mb-4">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
 
-    <!-- Avatar + Info -->
-    <div class="flex items-start gap-4">
-      <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-xl md:text-2xl text-white font-medium flex-shrink-0">
-        {{ profile.name[0]?.toUpperCase() }}
-      </div>
-      <div class="flex-1 min-w-0">
-        <!-- Name + Badges -->
-        <div class="flex flex-wrap items-center gap-2">
-          <h1 class="text-lg md:text-xl font-medium text-[#F0F0F2]">{{ profile.name }}</h1>
-          <span class="text-xs px-2 py-0.5 rounded-full" [class]="getValueScoreClass()">
-            {{ profile.valueScore }}
-          </span>
-          <span class="text-xs px-2 py-0.5 rounded-full"
-            [class.bg-[#12251E]]="profile.status === 'Active'"
-            [class.text-[#5DCAA5]]="profile.status === 'Active'"
-            [class.bg-[#1E1E24]]="profile.status !== 'Active'"
-            [class.text-[#666]]="profile.status !== 'Active'">
-            {{ profile.status }}
-          </span>
+        <!-- Avatar + Info -->
+        <div class="flex items-start gap-4">
+          <div
+            class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#D4537E] flex items-center justify-center text-xl md:text-2xl text-white font-medium flex-shrink-0">
+            {{ profile.name[0]?.toUpperCase() }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <!-- Name + Badges -->
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-lg md:text-xl font-medium text-[#F0F0F2]">{{ profile.name }}</h1>
+              <span class="text-xs px-2 py-0.5 rounded-full" [class]="getValueScoreClass()">
+                {{ profile.valueScore }}
+              </span>
+              <span class="text-xs px-2 py-0.5 rounded-full" [class.bg-[#12251E]]="profile.status === 'Active'"
+                [class.text-[#5DCAA5]]="profile.status === 'Active'" [class.bg-[#1E1E24]]="profile.status !== 'Active'"
+                [class.text-[#666]]="profile.status !== 'Active'">
+                {{ profile.status }}
+              </span>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+              <span class="text-xs text-[#666]" *ngIf="profile.email">📧 {{ profile.email }}</span>
+              <span class="text-xs text-[#666]" *ngIf="profile.phone">📞 {{ profile.phone }}</span>
+              <span class="text-xs text-[#666]" *ngIf="profile.address">📍 {{ profile.address }}</span>
+            </div>
+
+            <div class="mt-1" *ngIf="profile.notes">
+              <span class="text-xs text-[#666]">📝 {{ profile.notes }}</span>
+            </div>
+
+            <!-- Mobile: Customer since -->
+            <div class="mt-2 md:hidden">
+              <div class="text-xs text-[#666]">Customer since <span class="text-[#F0F0F2]">{{ profile.createdAt |
+                  date:'MMM d, y' }}</span></div>
+              <div class="text-xs mt-1" [class]="getLastOrderClass()">{{ getLastOrderText() }}</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Contact Info -->
-        <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-          <span class="text-xs text-[#666]" *ngIf="profile.email">📧 {{ profile.email }}</span>
-          <span class="text-xs text-[#666]" *ngIf="profile.phone">📞 {{ profile.phone }}</span>
-          <span class="text-xs text-[#666]" *ngIf="profile.address">📍 {{ profile.address }}</span>
+        <!-- Desktop: Customer since -->
+        <div class="hidden md:block text-right flex-shrink-0">
+          <div class="text-xs text-[#666]">Customer since</div>
+          <div class="text-sm text-[#F0F0F2] mt-1">{{ profile.createdAt | date:'MMM d, y' }}</div>
+          <div class="text-xs mt-2" [class]="getLastOrderClass()">{{ getLastOrderText() }}</div>
         </div>
 
-        <div class="mt-1" *ngIf="profile.notes">
-          <span class="text-xs text-[#666]">📝 {{ profile.notes }}</span>
-        </div>
-
-        <!-- Mobile: Customer since -->
-        <div class="mt-2 md:hidden">
-          <div class="text-xs text-[#666]">Customer since <span class="text-[#F0F0F2]">{{ profile.createdAt | date:'MMM d, y' }}</span></div>
-          <div class="text-xs mt-1" [class]="getLastOrderClass()">{{ getLastOrderText() }}</div>
-        </div>
       </div>
     </div>
-
-    <!-- Desktop: Customer since -->
-    <div class="hidden md:block text-right flex-shrink-0">
-      <div class="text-xs text-[#666]">Customer since</div>
-      <div class="text-sm text-[#F0F0F2] mt-1">{{ profile.createdAt | date:'MMM d, y' }}</div>
-      <div class="text-xs mt-2" [class]="getLastOrderClass()">{{ getLastOrderText() }}</div>
-    </div>
-
-  </div>
-</div>
-<!-- grid grid-cols-6 gap-3 mb-4 -->
+    <!-- grid grid-cols-6 gap-3 mb-4 -->
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
       <div class="bg-[#111114] border border-[#1E1E24] rounded-xl p-4 relative overflow-hidden">
@@ -166,17 +219,13 @@
 
     <!-- Tabs -->
     <div class="flex gap-1 mb-4">
-      <button (click)="activeTab = 'orders'"
-        class="px-4 py-2 text-xs rounded-lg transition-colors"
-        [class.bg-[#1A1A20]]="activeTab === 'orders'"
-        [class.text-[#F0F0F2]]="activeTab === 'orders'"
+      <button (click)="activeTab = 'orders'" class="px-4 py-2 text-xs rounded-lg transition-colors"
+        [class.bg-[#1A1A20]]="activeTab === 'orders'" [class.text-[#F0F0F2]]="activeTab === 'orders'"
         [class.text-[#666]]="activeTab !== 'orders'">
         Orders ({{ profile.orders?.length || 0 }})
       </button>
-      <button (click)="activeTab = 'invoices'"
-        class="px-4 py-2 text-xs rounded-lg transition-colors"
-        [class.bg-[#1A1A20]]="activeTab === 'invoices'"
-        [class.text-[#F0F0F2]]="activeTab === 'invoices'"
+      <button (click)="activeTab = 'invoices'" class="px-4 py-2 text-xs rounded-lg transition-colors"
+        [class.bg-[#1A1A20]]="activeTab === 'invoices'" [class.text-[#F0F0F2]]="activeTab === 'invoices'"
         [class.text-[#666]]="activeTab !== 'invoices'">
         Invoices ({{ profile.invoices?.length || 0 }})
       </button>

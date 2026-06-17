@@ -17,7 +17,7 @@ import { ExportService } from '../../services/export.service';
 })
 export class CustomersComponent implements OnInit {
 showMenu = false;
-
+showUserMenu = false;
   customers: any[] = [];
   loading = true;
   search = '';

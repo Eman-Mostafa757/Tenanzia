@@ -15,7 +15,7 @@ import { SubscriptionService } from '../../services/subscription.service';
 })
 export class EmployeeProfileComponent implements OnInit {
 showMenu = false;
-
+showUserMenu = false;
   profile: any = null;
   loading = true;
   username ='';

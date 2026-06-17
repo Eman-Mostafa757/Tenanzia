@@ -36,7 +36,7 @@ export class OrdersComponent implements OnInit {
   currentUserId: number | undefined;
   curuntPlan: any = null;
 showMenu = false;
-
+showUserMenu = false;
   form: {
     customerId: number | null,
     notes: string,

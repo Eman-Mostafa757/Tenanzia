@@ -15,7 +15,7 @@ import { NotificationBellComponent } from '../../components/notification-bell/no
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
-
+showUserMenu = false;
   me: any = null;
   loading = true;
   activeTab = 'profile';
